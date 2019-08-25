@@ -1,0 +1,153 @@
+{
+	"openapi": "3.0.2",
+	"info": {
+		"title": "node-pluginsmanager-plugin-commandline",
+		"version": "1.0.0",
+		"description": "A plugin package to inherit for node-pluginsmanager",
+		"contact": {
+			"name": "Sébastien VIDAL",
+			"url": "https://github.com/Psychopoulet/node-pluginsmanager/issues"
+		},
+		"license": {
+			"name": "ISC",
+			"url": "https://en.wikipedia.org/wiki/ISC_license"
+		}
+	},
+	"paths": {
+		"/node-pluginsmanager-plugin-commandline/descriptor": {
+			"get": {
+				"description": "",
+				"summary": "Return parsed descriptor",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "Returned descriptor"
+					},
+					"default": {
+						"description": "An error occured",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Error"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin-commandline/api/commandlines": {
+			"get": {
+				"description": "",
+				"summary": "Return all running command lines",
+				"parameters": [],
+				"operationId": "getAll",
+				"responses": {
+					"200": {
+						"description": "Returned data",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Commandlines"
+									}
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occured",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Error"
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"description": "",
+				"summary": "Create a new command line",
+				"parameters": [],
+				"operationId": "create",
+				"responses": {
+					"201": {
+						"description": "Returned data"
+					},
+					"default": {
+						"description": "An error occured",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Error"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"Commandlines": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/Commandline"
+				}
+			},
+			"Commandline": {
+				"type": "object",
+				"properties": {
+					"number": {
+						"type": "integer"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"number",
+					"name"
+				]
+			},
+			"Error": {
+				"type": "object",
+				"required": [
+					"code",
+					"message"
+				],
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					}
+				}
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "http://127.0.0.1:3000",
+			"description": "Test server for HTTP requests"
+		}
+	],
+	"externalDocs": {
+		"description": "Find out more about this API",
+		"url": "https://github.com/Psychopoulet/node-pluginsmanager-plugin-commandline#readme"
+	}
+}
