@@ -4,7 +4,7 @@
 
 	// natives
 	const { join } = require("path");
-	const { request } = require("http");
+	const request = require("request");
 
 	// externals
 	const express = require("express");
@@ -66,40 +66,13 @@ module.exports = class TestServer {
 
 		return new Promise((resolve, reject) => {
 
-			const formatedData = JSON.stringify(data);
-
-			const req = request(this._mainUrl + url, {
+			request({
+				"url": this._mainUrl + url,
 				"method": method.toUpperCase(),
-				"headers": {
-					"Content-Type": "application/json",
-					"Content-Length": null !== data ? formatedData.length : 0
-				}
-			}, (res) => {
-
-				try {
-
-					res.setEncoding("utf8");
-
-					let rawData = "";
-
-					res.on("data", (chunk) => {
-						rawData += chunk;
-					}).on("end", () => {
-						resolve(rawData);
-					});
-
-				}
-				catch (e) {
-					reject(e);
-				}
-
+				"body": JSON.stringify(data)
+			}, (err, response, body) => {
+				return err ? reject(err) : resolve(body);
 			});
-
-			if (null !== data) {
-				req.write(formatedData);
-			}
-
-			req.end();
 
 		}).then((content) => {
 
