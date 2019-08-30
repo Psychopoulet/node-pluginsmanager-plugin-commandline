@@ -6,7 +6,7 @@
 		"description": "A plugin package to inherit for node-pluginsmanager",
 		"contact": {
 			"name": "Sébastien VIDAL",
-			"url": "https://github.com/Psychopoulet/node-pluginsmanager/issues"
+			"url": "https://github.com/Psychopoulet/node-pluginsmanager-plugin-commandline/issues"
 		},
 		"license": {
 			"name": "ISC",
@@ -18,20 +18,23 @@
 			"get": {
 				"description": "",
 				"summary": "Return parsed descriptor",
-				"parameters": [],
 				"responses": {
 					"200": {
-						"description": "Returned descriptor"
+						"description": "Returned descriptor",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object"
+								}
+							}
+						}
 					},
 					"default": {
 						"description": "An error occured",
 						"content": {
 							"application/json": {
 								"schema": {
-									"type": "array",
-									"items": {
-										"$ref": "#/components/schemas/Error"
-									}
+									"$ref": "#/components/schemas/Error"
 								}
 							}
 						}
@@ -43,7 +46,6 @@
 			"get": {
 				"description": "",
 				"summary": "Return all running command lines",
-				"parameters": [],
 				"operationId": "getAll",
 				"responses": {
 					"200": {
@@ -51,10 +53,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"type": "array",
-									"items": {
-										"$ref": "#/components/schemas/Commandlines"
-									}
+									"$ref": "#/components/schemas/Commandlines"
 								}
 							}
 						}
@@ -64,10 +63,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"type": "array",
-									"items": {
-										"$ref": "#/components/schemas/Error"
-									}
+									"$ref": "#/components/schemas/Error"
 								}
 							}
 						}
@@ -77,21 +73,57 @@
 			"put": {
 				"description": "",
 				"summary": "Create a new command line",
-				"parameters": [],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"command": {
+										"description": " Command line's arguments",
+										"required": true,
+										"schema": {
+											"type": "string"
+										}
+									},
+									"arguments": {
+										"description": " Command line's arguments",
+										"schema": {
+											"type": "array",
+											"items": {
+												"type": "string"
+											}
+										}
+									},
+									"options": {
+										"description": "Command line's options",
+										"schema": {
+											"$ref": "#/components/schemas/Options"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
 				"operationId": "create",
 				"responses": {
 					"201": {
-						"description": "Returned data"
+						"description": "Returned data",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Commandline"
+								}
+							}
+						}
 					},
 					"default": {
 						"description": "An error occured",
 						"content": {
 							"application/json": {
 								"schema": {
-									"type": "array",
-									"items": {
-										"$ref": "#/components/schemas/Error"
-									}
+									"$ref": "#/components/schemas/Error"
 								}
 							}
 						}
@@ -114,14 +146,45 @@
 					"number": {
 						"type": "integer"
 					},
-					"name": {
+					"command": {
 						"type": "string"
+					},
+					"arguments": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"options": {
+						"$ref": "#/components/schemas/Options"
 					}
 				},
 				"required": [
 					"number",
-					"name"
+					"command",
+					"arguments",
+					"options"
 				]
+			},
+			"Options": {
+				"type": "object",
+				"properties": {
+					"cwd": {
+						"type": "string"
+					},
+					"detached": {
+						"type": "boolean"
+					},
+					"uid": {
+						"type": "integer"
+					},
+					"gid": {
+						"type": "integer"
+					},
+					"windowsHide": {
+						"type": "boolean"
+					}
+				}
 			},
 			"Error": {
 				"type": "object",
@@ -144,6 +207,10 @@
 		{
 			"url": "http://127.0.0.1:3000",
 			"description": "Test server for HTTP requests"
+		},
+		{
+			"url": "ws://127.0.0.1:3001",
+			"description": "Test server for socket requests"
 		}
 	],
 	"externalDocs": {
