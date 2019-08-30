@@ -1,17 +1,17 @@
-# node-pluginsmanager-plugin-commandline
-A plugin package to inherit for node-pluginsmanager
+# node-pluginsmanager-plugin-terminals
+A plugin to manage terminals and execute command lines for node-pluginsmanager
 
-[![Build status](https://api.travis-ci.org/Psychopoulet/node-pluginsmanager-plugin-commandline.svg?branch=master)](https://travis-ci.org/Psychopoulet/node-pluginsmanager-plugin-commandline)
-[![Coverage status](https://coveralls.io/repos/github/Psychopoulet/node-pluginsmanager-plugin-commandline/badge.svg?branch=master)](https://coveralls.io/github/Psychopoulet/node-pluginsmanager-plugin-commandline)
-[![Dependency status](https://david-dm.org/Psychopoulet/node-pluginsmanager-plugin-commandline/status.svg)](https://david-dm.org/Psychopoulet/node-pluginsmanager-plugin-commandline)
-[![Dev dependency status](https://david-dm.org/Psychopoulet/node-pluginsmanager-plugin-commandline/dev-status.svg)](https://david-dm.org/Psychopoulet/node-pluginsmanager-plugin-commandline?type=dev)
-[![Issues](https://img.shields.io/github/issues/Psychopoulet/node-pluginsmanager-plugin-commandline.svg)](https://github.com/Psychopoulet/node-pluginsmanager-plugin-commandline/issues)
-[![Pull requests](https://img.shields.io/github/issues-pr/Psychopoulet/node-pluginsmanager-plugin-commandline.svg)](https://github.com/Psychopoulet/node-pluginsmanager-plugin-commandline/pulls)
+[![Build status](https://api.travis-ci.org/Psychopoulet/node-pluginsmanager-plugin-terminals.svg?branch=master)](https://travis-ci.org/Psychopoulet/node-pluginsmanager-plugin-terminals)
+[![Coverage status](https://coveralls.io/repos/github/Psychopoulet/node-pluginsmanager-plugin-terminals/badge.svg?branch=master)](https://coveralls.io/github/Psychopoulet/node-pluginsmanager-plugin-terminals)
+[![Dependency status](https://david-dm.org/Psychopoulet/node-pluginsmanager-plugin-terminals/status.svg)](https://david-dm.org/Psychopoulet/node-pluginsmanager-plugin-terminals)
+[![Dev dependency status](https://david-dm.org/Psychopoulet/node-pluginsmanager-plugin-terminals/dev-status.svg)](https://david-dm.org/Psychopoulet/node-pluginsmanager-plugin-terminals?type=dev)
+[![Issues](https://img.shields.io/github/issues/Psychopoulet/node-pluginsmanager-plugin-terminals.svg)](https://github.com/Psychopoulet/node-pluginsmanager-plugin-terminals/issues)
+[![Pull requests](https://img.shields.io/github/issues-pr/Psychopoulet/node-pluginsmanager-plugin-terminals.svg)](https://github.com/Psychopoulet/node-pluginsmanager-plugin-terminals/pulls)
 
 ## Installation
 
 ```bash
-$ npm install node-pluginsmanager-plugin-commandline
+$ npm install node-pluginsmanager-plugin-terminals
 ```
 
 ## Features
@@ -67,8 +67,8 @@ interface i?? {
 ## Tests
 
 ```bash
-$ git clone git://github.com/Psychopoulet/node-pluginsmanager-plugin-commandline.git
-$ cd ./node-pluginsmanager-plugin-commandline
+$ git clone git://github.com/Psychopoulet/node-pluginsmanager-plugin-terminals.git
+$ cd ./node-pluginsmanager-plugin-terminals
 $ npm install
 $ npm run-script tests
 ```
