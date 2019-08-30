@@ -35,11 +35,11 @@ module.exports = class TestServer {
 
 			return getDescriptorServerUrl().then((url) => {
 
-				this._mainUrl = url.href + "node-pluginsmanager-plugin-commandline";
+				this._mainUrl = url;
 
 				return new Promise((resolve) => {
 
-					this._runningServer = express().use((req, res, next) => {
+					const app = express().use((req, res, next) => {
 						orchestrator.appMiddleware(req, res, next);
 					}).use((req, res) => {
 
@@ -47,9 +47,13 @@ module.exports = class TestServer {
 							"Content-Type": "text/plain; charset=utf-8"
 						});
 
-						res.end("Unknown path");
+						res.end(JSON.stringify("Unknown path"));
 
-					}).listen(parseInt(url.port, 10), resolve);
+					});
+
+					const { port } = parse(url);
+
+					this._runningServer = app.listen(parseInt(port, 10), resolve);
 
 				});
 
@@ -59,13 +63,15 @@ module.exports = class TestServer {
 
 			return getDescriptorSocketServerUrl().then((url) => {
 
+				const { port } = parse(url);
+
 				this._runningWebsocketServer = new WebSocket.Server({
-					"port": parseInt(url.port, 10)
+					"port": parseInt(port, 10)
 				});
 
 				orchestrator.socketMiddleware(this._runningWebsocketServer);
 
-				this._websocketClient = new WebSocket(url.href);
+				this._websocketClient = new WebSocket(url);
 
 			});
 

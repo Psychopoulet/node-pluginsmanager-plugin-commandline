@@ -1,14 +1,17 @@
 /// <reference types="node" />
 /// <reference types="ws" />
+/// <reference types="node-pluginsmanager-plugin" />
 
-declare module "node-pluginsmanager-plugin-commandline" {
+declare module "node-pluginsmanager-plugin-terminals" {
 
-	import { Orchestrator } from "node-pluginsmanager-plugin";
+	import { Orchestrator, Server, Mediator } from "node-pluginsmanager-plugin";
 
 	// classes
 
-	export class CommandLineOrchestrator extends Orchestrator {
+	export { Orchestrator, Server };
 
-	}
+	export class TerminalsMediator extends Mediator {
+
+	};
 
 }

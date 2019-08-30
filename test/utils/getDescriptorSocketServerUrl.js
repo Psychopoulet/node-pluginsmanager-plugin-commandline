@@ -4,7 +4,6 @@
 
 	// natives
 	const { join } = require("path");
-	const { parse } = require("url");
 
 	// natives
 	const readDescriptor = require(join(__dirname, "readDescriptor.js"));
@@ -14,9 +13,7 @@
 module.exports = function getDescriptorSocketServerUrl () {
 
 	return readDescriptor().then((descriptor) => {
-
-		return Promise.resolve(parse(descriptor.servers[1].url));
-
+		return Promise.resolve(descriptor.servers[1].url);
 	});
 
 };

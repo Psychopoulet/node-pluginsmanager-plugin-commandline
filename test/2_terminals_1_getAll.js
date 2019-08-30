@@ -12,7 +12,7 @@
 
 // tests
 
-describe("getAll", () => {
+describe("Terminals / getAll", () => {
 
 	const orchestrator = new Orchestrator();
 	const testServer = new TestServer();
@@ -39,16 +39,16 @@ describe("getAll", () => {
 
 	it("should execute mediator", () => {
 
-		return orchestrator._Mediator.getAll().then((result) => {
-			deepStrictEqual(result, [], "Command lines are not as expected");
+		return orchestrator._Mediator.getAllTerminals().then((result) => {
+			deepStrictEqual(result, [], "Terminals are not as expected");
 		});
 
 	});
 
 	it("should execute http request", () => {
 
-		return testServer.request("/api/commandlines").then((result) => {
-			deepStrictEqual(result, [], "Command lines are not as expected");
+		return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals").then((result) => {
+			deepStrictEqual(result, [], "Terminals are not as expected");
 		});
 
 	});

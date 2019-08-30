@@ -1,12 +1,12 @@
 {
 	"openapi": "3.0.2",
 	"info": {
-		"title": "node-pluginsmanager-plugin-commandline",
+		"title": "node-pluginsmanager-plugin-terminals",
 		"version": "1.0.0",
-		"description": "A plugin package to inherit for node-pluginsmanager",
+		"description": "A plugin to manage terminals and execute command lines for node-pluginsmanager",
 		"contact": {
 			"name": "Sébastien VIDAL",
-			"url": "https://github.com/Psychopoulet/node-pluginsmanager-plugin-commandline/issues"
+			"url": "https://github.com/Psychopoulet/node-pluginsmanager-plugin-terminals/issues"
 		},
 		"license": {
 			"name": "ISC",
@@ -14,7 +14,7 @@
 		}
 	},
 	"paths": {
-		"/node-pluginsmanager-plugin-commandline/descriptor": {
+		"/node-pluginsmanager-plugin-terminals/descriptor": {
 			"get": {
 				"description": "",
 				"summary": "Return parsed descriptor",
@@ -42,18 +42,21 @@
 				}
 			}
 		},
-		"/node-pluginsmanager-plugin-commandline/api/commandlines": {
+		"/node-pluginsmanager-plugin-terminals/api/terminals": {
 			"get": {
 				"description": "",
-				"summary": "Return all running command lines",
-				"operationId": "getAll",
+				"summary": "Return all running terminals",
+				"operationId": "getAllTerminals",
 				"responses": {
 					"200": {
-						"description": "Returned data",
+						"description": "Opened terminals",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/Commandlines"
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Terminal"
+									}
 								}
 							}
 						}
@@ -72,36 +75,139 @@
 			},
 			"put": {
 				"description": "",
-				"summary": "Create a new command line",
+				"summary": "Open a terminal",
+				"operationId": "openTerminal",
 				"requestBody": {
 					"content": {
 						"application/json": {
 							"schema": {
 								"type": "object",
 								"properties": {
-									"command": {
-										"description": " Command line's arguments",
-										"required": true,
-										"schema": {
-											"type": "string"
-										}
-									},
-									"arguments": {
-										"description": " Command line's arguments",
-										"schema": {
-											"type": "array",
-											"items": {
-												"type": "string"
-											}
-										}
-									},
-									"options": {
-										"description": "Command line's options",
-										"schema": {
-											"$ref": "#/components/schemas/Options"
-										}
+									"name":  {
+										"type": "string"
 									}
+								},
+								"required": [ "name" ]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Created terminal",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Terminal"
 								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occured",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin-terminals/api/terminals/{terminalnumber}": {
+			"get": {
+				"description": "",
+				"summary": "Return a specific terminal",
+				"operationId": "getOneTerminal",
+				"parameters": [
+					{
+						"name": "terminalnumber",
+						"in": "path",
+						"description": "Terminal number",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Searched terminal",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Terminal"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occured",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"description": "",
+				"summary": "Close a specific terminal",
+				"operationId": "closeTerminal",
+				"parameters": [
+					{
+						"name": "terminalnumber",
+						"in": "path",
+						"description": "Terminal number",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Terminal closed"
+					},
+					"default": {
+						"description": "An error occured",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin-terminals/api/terminals/{terminalnumber}/commandline": {
+			"put": {
+				"description": "",
+				"summary": "Execute a new command line",
+				"parameters": [
+					{
+						"name": "terminalnumber",
+						"in": "path",
+						"description": "Terminal number",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"$ref": "#/components/schemas/Commandline"
 							}
 						}
 					}
@@ -134,18 +240,26 @@
 	},
 	"components": {
 		"schemas": {
-			"Commandlines": {
-				"type": "array",
-				"items": {
-					"$ref": "#/components/schemas/Commandline"
-				}
-			},
-			"Commandline": {
+			"Terminal": {
 				"type": "object",
 				"properties": {
 					"number": {
 						"type": "integer"
 					},
+					"name": {
+						"type": "string"
+					},
+					"commandlines": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/Commandline"
+						}
+					}
+				}
+			},
+			"Commandline": {
+				"type": "object",
+				"properties": {
 					"command": {
 						"type": "string"
 					},
@@ -215,6 +329,6 @@
 	],
 	"externalDocs": {
 		"description": "Find out more about this API",
-		"url": "https://github.com/Psychopoulet/node-pluginsmanager-plugin-commandline#readme"
+		"url": "https://github.com/Psychopoulet/node-pluginsmanager-plugin-terminals#readme"
 	}
 }

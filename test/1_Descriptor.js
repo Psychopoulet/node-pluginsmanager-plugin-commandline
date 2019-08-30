@@ -44,7 +44,7 @@ describe("descriptor", () => {
 
 	it("should execute http request", () => {
 
-		return testServer.request("/descriptor").then((result) => {
+		return testServer.request("/node-pluginsmanager-plugin-terminals/descriptor").then((result) => {
 			strictEqual(JSON.stringify(result), JSON.stringify(orchestrator._Descriptor), "Descriptor is not as expected");
 		});
 
