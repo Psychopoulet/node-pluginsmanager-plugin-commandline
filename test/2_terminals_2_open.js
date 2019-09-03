@@ -10,6 +10,11 @@
 	const TestServer = require(join(__dirname, "utils", "TestServer.js"));
 	const Orchestrator = require(join(__dirname, "..", "lib", "Orchestrator.js"));
 
+// consts
+
+	const TEST_NAME = "Test 1";
+	const TEST_SHELL = "cmd";
+
 // tests
 
 describe("Terminals / getAll", () => {
@@ -54,65 +59,150 @@ describe("Terminals / getAll", () => {
 
 		});
 
-		it("should test without name", (done) => {
+		describe("name", () => {
 
-			orchestrator._Mediator.openTerminal(null, {}).then(() => {
-				done(new Error("There is no generated Error"));
-			}).catch((err) => {
+			it("should test without name", (done) => {
 
-				strictEqual(typeof err, "object", "Generated Error is not as expected");
-				strictEqual(err instanceof ReferenceError, true, "Generated Error is not as expected");
+				orchestrator._Mediator.openTerminal(null, {}).then(() => {
+					done(new Error("There is no generated Error"));
+				}).catch((err) => {
 
-				done();
+					strictEqual(typeof err, "object", "Generated Error is not as expected");
+					strictEqual(err instanceof ReferenceError, true, "Generated Error is not as expected");
+
+					done();
+
+				});
+
+			});
+
+			it("should test with wrong name", (done) => {
+
+				orchestrator._Mediator.openTerminal(null, {
+					"name": false
+				}).then(() => {
+					done(new Error("There is no generated Error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated Error is not as expected");
+					strictEqual(err instanceof TypeError, true, "Generated Error is not as expected");
+
+					done();
+
+				});
+
+			});
+
+			it("should test with empty name", (done) => {
+
+				orchestrator._Mediator.openTerminal(null, {
+					"name": ""
+				}).then(() => {
+					done(new Error("There is no generated Error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated Error is not as expected");
+					strictEqual(err instanceof RangeError, true, "Generated Error is not as expected");
+
+					done();
+
+				});
 
 			});
 
 		});
 
-		it("should test with wrong name", (done) => {
+		describe("shell", () => {
 
-			orchestrator._Mediator.openTerminal(null, {
-				"name": false
-			}).then(() => {
-				done(new Error("There is no generated Error"));
-			}).catch((err) => {
+			it("should test without shell", (done) => {
 
-				strictEqual(typeof err, "object", "Generated Error is not as expected");
-				strictEqual(err instanceof TypeError, true, "Generated Error is not as expected");
+				orchestrator._Mediator.openTerminal(null, {
+					"name": TEST_NAME
+				}).then(() => {
+					done(new Error("There is no generated Error"));
+				}).catch((err) => {
 
-				done();
+					strictEqual(typeof err, "object", "Generated Error is not as expected");
+					strictEqual(err instanceof ReferenceError, true, "Generated Error is not as expected");
+
+					done();
+
+				});
+
+			});
+
+			it("should test with wrong shell", (done) => {
+
+				orchestrator._Mediator.openTerminal(null, {
+					"name": TEST_NAME,
+					"shell": false
+				}).then(() => {
+					done(new Error("There is no generated Error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated Error is not as expected");
+					strictEqual(err instanceof TypeError, true, "Generated Error is not as expected");
+
+					done();
+
+				});
+
+			});
+
+			it("should test with empty shell", (done) => {
+
+				orchestrator._Mediator.openTerminal(null, {
+					"name": TEST_NAME,
+					"shell": ""
+				}).then(() => {
+					done(new Error("There is no generated Error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated Error is not as expected");
+					strictEqual(err instanceof RangeError, true, "Generated Error is not as expected");
+
+					done();
+
+				});
 
 			});
 
 		});
 
-		it("should test with empty name", (done) => {
+		describe("execute", () => {
 
-			orchestrator._Mediator.openTerminal(null, {
-				"name": ""
-			}).then(() => {
-				done(new Error("There is no generated Error"));
-			}).catch((err) => {
+			it("should open a terminal", () => {
 
-				strictEqual(typeof err, "object", "Generated Error is not as expected");
-				strictEqual(err instanceof RangeError, true, "Generated Error is not as expected");
+				return orchestrator._Mediator.openTerminal(null, {
+					"name": TEST_NAME,
+					"shell": TEST_SHELL
+				}).then((result) => {
 
-				done();
+					strictEqual(typeof result, "object", "result is not as expected");
+					strictEqual(typeof result.number, "number", "result.number is not as expected");
+						strictEqual(result.number, 1, "result.number is not as expected");
+					strictEqual(typeof result.name, "string", "result.name is not as expected");
+						strictEqual(result.name, TEST_NAME, "result.name is not as expected");
+					strictEqual(typeof result.shell, "string", "result.shell is not as expected");
+						strictEqual(result.shell, TEST_SHELL, "result.shell is not as expected");
 
-			});
+					return orchestrator._Mediator.getAllTerminals();
 
-		});
+				}).then((terminals) => {
 
-		it("should open a terminal", () => {
+					strictEqual(typeof terminals, "object", "terminals is not as expected");
+					strictEqual(terminals instanceof Array, true, "terminals is not as expected");
+						strictEqual(terminals.length, 1, "terminals is not as expected");
 
-			return orchestrator._Mediator.openTerminal(null, {
-				"name": "Test 1"
-			}).then(() => {
-				return orchestrator._Mediator.getAllTerminals();
-			}).then((terminals) => {
+					strictEqual(typeof terminals[0], "object", "terminals[0] is not as expected");
+					strictEqual(typeof terminals[0].number, "number", "terminals[0].number is not as expected");
+						strictEqual(terminals[0].number, 1, "terminals[0].number is not as expected");
+					strictEqual(typeof terminals[0].name, "string", "terminals[0].name is not as expected");
+						strictEqual(terminals[0].name, TEST_NAME, "terminals[0].name is not as expected");
+					strictEqual(typeof terminals[0].shell, "string", "terminals[0].shell is not as expected");
+						strictEqual(terminals[0].shell, TEST_SHELL, "terminals[0].shell is not as expected");
 
-				strictEqual(terminals.length, 1, "There is no opened terminal");
-				strictEqual(terminals[0].name, "Test 1", "Opened terminal is not as expected");
+				});
 
 			});
 
@@ -158,82 +248,138 @@ describe("Terminals / getAll", () => {
 
 		});
 
-		it("should test without name", () => {
+		describe("name", () => {
 
-			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {}).then((result) => {
+			it("should test without name", () => {
 
-				strictEqual(typeof result, "object", "result is not as expected");
-				strictEqual(typeof result.code, "string", "result.code is not as expected");
-					strictEqual(result.code, "MISSING_PARAMETER", "result.code is not as expected");
-				strictEqual(typeof result.message, "string", "result.message is not as expected");
+				return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {}).then((result) => {
+
+					strictEqual(typeof result, "object", "result is not as expected");
+					strictEqual(typeof result.code, "string", "result.code is not as expected");
+						strictEqual(result.code, "MISSING_PARAMETER", "result.code is not as expected");
+					strictEqual(typeof result.message, "string", "result.message is not as expected");
+
+				});
+
+			});
+
+			it("should test with wrong name", () => {
+
+				return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
+					"name": false
+				}).then((result) => {
+
+					strictEqual(typeof result, "object", "result is not as expected");
+					strictEqual(typeof result.code, "string", "result.code is not as expected");
+						strictEqual(result.code, "WRONG_TYPE_PARAMETER", "result.code is not as expected");
+					strictEqual(typeof result.message, "string", "result.message is not as expected");
+
+				});
+
+			});
+
+			it("should test with empty name", () => {
+
+				return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
+					"name": ""
+				}).then((result) => {
+
+					strictEqual(typeof result, "object", "result is not as expected");
+					strictEqual(typeof result.code, "string", "result.code is not as expected");
+						strictEqual(result.code, "RANGE_OR_EMPTY_PARAMETER", "result.code is not as expected");
+					strictEqual(typeof result.message, "string", "result.message is not as expected");
+
+				});
 
 			});
 
 		});
 
-		it("should test with wrong name", () => {
+		describe("shell", () => {
 
-			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
-				"name": false
-			}).then((result) => {
+			it("should test without shell", () => {
 
-				strictEqual(typeof result, "object", "result is not as expected");
-				strictEqual(typeof result.code, "string", "result.code is not as expected");
-					strictEqual(result.code, "WRONG_TYPE_PARAMETER", "result.code is not as expected");
-				strictEqual(typeof result.message, "string", "result.message is not as expected");
+				return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
+					"name": TEST_NAME
+				}).then((result) => {
+
+					strictEqual(typeof result, "object", "result is not as expected");
+					strictEqual(typeof result.code, "string", "result.code is not as expected");
+						strictEqual(result.code, "MISSING_PARAMETER", "result.code is not as expected");
+					strictEqual(typeof result.message, "string", "result.message is not as expected");
+
+				});
+
+			});
+
+			it("should test with wrong shell", () => {
+
+				return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
+					"name": TEST_NAME,
+					"shell": false
+				}).then((result) => {
+
+					strictEqual(typeof result, "object", "result is not as expected");
+					strictEqual(typeof result.code, "string", "result.code is not as expected");
+						strictEqual(result.code, "WRONG_TYPE_PARAMETER", "result.code is not as expected");
+					strictEqual(typeof result.message, "string", "result.message is not as expected");
+
+				});
+
+			});
+
+			it("should test with empty shell", () => {
+
+				return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
+					"name": TEST_NAME,
+					"shell": ""
+				}).then((result) => {
+
+					strictEqual(typeof result, "object", "result is not as expected");
+					strictEqual(typeof result.code, "string", "result.code is not as expected");
+						strictEqual(result.code, "RANGE_OR_EMPTY_PARAMETER", "result.code is not as expected");
+					strictEqual(typeof result.message, "string", "result.message is not as expected");
+
+				});
 
 			});
 
 		});
 
-		it("should test with empty name", () => {
+		describe("execute", () => {
 
-			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
-				"name": ""
-			}).then((result) => {
+			it("should open a terminal", () => {
 
-				strictEqual(typeof result, "object", "result is not as expected");
-				strictEqual(typeof result.code, "string", "result.code is not as expected");
-					strictEqual(result.code, "RANGE_OR_EMPTY_PARAMETER", "result.code is not as expected");
-				strictEqual(typeof result.message, "string", "result.message is not as expected");
+				return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
+					"name": TEST_NAME,
+					"shell": TEST_SHELL
+				}).then((result) => {
 
-			});
+					strictEqual(typeof result, "object", "result is not as expected");
+					strictEqual(typeof result.number, "number", "result.number is not as expected");
+						strictEqual(result.number, 1, "result.number is not as expected");
+					strictEqual(typeof result.name, "string", "result.name is not as expected");
+						strictEqual(result.name, TEST_NAME, "result.name is not as expected");
+					strictEqual(typeof result.shell, "string", "result.shell is not as expected");
+						strictEqual(result.shell, TEST_SHELL, "result.shell is not as expected");
 
-		});
+					return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "get");
 
-		it("should open a terminal", () => {
+				}).then((terminals) => {
 
-			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
-				"name": "Test 1"
-			}).then((result) => {
+					strictEqual(typeof terminals, "object", "terminals is not as expected");
+					strictEqual(terminals instanceof Array, true, "terminals is not as expected");
+						strictEqual(terminals.length, 1, "terminals is not as expected");
 
-				strictEqual(typeof result, "object", "result is not as expected");
-				strictEqual(typeof result.number, "number", "result.number is not as expected");
-					strictEqual(result.number, 1, "result.number is not as expected");
-				strictEqual(typeof result.name, "string", "result.name is not as expected");
-					strictEqual(result.name, "Test 1", "result.name is not as expected");
+					strictEqual(typeof terminals[0], "object", "terminals[0] is not as expected");
+					strictEqual(typeof terminals[0].number, "number", "terminals[0].number is not as expected");
+						strictEqual(terminals[0].number, 1, "terminals[0].number is not as expected");
+					strictEqual(typeof terminals[0].name, "string", "terminals[0].name is not as expected");
+						strictEqual(terminals[0].name, TEST_NAME, "terminals[0].name is not as expected");
+					strictEqual(typeof terminals[0].shell, "string", "terminals[0].shell is not as expected");
+						strictEqual(terminals[0].shell, TEST_SHELL, "terminals[0].shell is not as expected");
 
-				strictEqual(typeof result.commandlines, "object", "result.commandlines is not as expected");
-				strictEqual(result.commandlines instanceof Array, true, "result.commandlines is not as expected");
-					strictEqual(result.commandlines.length, 0, "result.commandlines is not as expected");
-
-				return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "get");
-
-			}).then((terminals) => {
-
-				strictEqual(typeof terminals, "object", "terminals is not as expected");
-				strictEqual(terminals instanceof Array, true, "terminals is not as expected");
-					strictEqual(terminals.length, 1, "terminals is not as expected");
-
-				strictEqual(typeof terminals[0], "object", "terminals[0] is not as expected");
-				strictEqual(typeof terminals[0].number, "number", "terminals[0].number is not as expected");
-					strictEqual(terminals[0].number, 1, "terminals[0].number is not as expected");
-				strictEqual(typeof terminals[0].name, "string", "terminals[0].name is not as expected");
-					strictEqual(terminals[0].name, "Test 1", "terminals[0].name is not as expected");
-
-				strictEqual(typeof terminals[0].commandlines, "object", "terminals[0].commandlines is not as expected");
-				strictEqual(terminals[0].commandlines instanceof Array, true, "terminals[0].commandlines is not as expected");
-					strictEqual(terminals[0].commandlines.length, 0, "terminals[0].commandlines is not as expected");
+				});
 
 			});
 

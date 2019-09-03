@@ -85,9 +85,18 @@
 								"properties": {
 									"name":  {
 										"type": "string"
+									},
+									"shell":  {
+										"type": "string"
+									},
+									"options": {
+										"$ref": "#/components/schemas/Options"
 									}
 								},
-								"required": [ "name" ]
+								"required": [
+									"name",
+									"shell"
+								]
 							}
 						}
 					}
@@ -207,7 +216,7 @@
 						"application/json": {
 							"schema": {
 								"type": "object",
-								"$ref": "#/components/schemas/Commandline"
+								"$ref": "#/components/schemas/CommandLine"
 							}
 						}
 					}
@@ -219,7 +228,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/Commandline"
+									"$ref": "#/components/schemas/CommandLine"
 								}
 							}
 						}
@@ -249,35 +258,20 @@
 					"name": {
 						"type": "string"
 					},
-					"commandlines": {
-						"type": "array",
-						"items": {
-							"$ref": "#/components/schemas/Commandline"
-						}
-					}
-				}
-			},
-			"Commandline": {
-				"type": "object",
-				"properties": {
-					"command": {
+					"shell": {
 						"type": "string"
-					},
-					"arguments": {
-						"type": "array",
-						"items": {
-							"type": "string"
-						}
 					},
 					"options": {
 						"$ref": "#/components/schemas/Options"
+					},
+					"currentcommandline": {
+						"$ref": "#/components/schemas/CommandLine"
 					}
 				},
 				"required": [
 					"number",
-					"command",
-					"arguments",
-					"options"
+					"name",
+					"shell"
 				]
 			},
 			"Options": {
@@ -299,6 +293,24 @@
 						"type": "boolean"
 					}
 				}
+			},
+			"CommandLine": {
+				"type": "object",
+				"properties": {
+					"command": {
+						"type": "string"
+					},
+					"arguments": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					}
+				},
+				"required": [
+					"command",
+					"arguments"
+				]
 			},
 			"Error": {
 				"type": "object",
