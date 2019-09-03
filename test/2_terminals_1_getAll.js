@@ -4,7 +4,7 @@
 
 	// natives
 	const { join } = require("path");
-	const { deepStrictEqual } = require("assert");
+	const { strictEqual } = require("assert");
 
 	// locals
 	const TestServer = require(join(__dirname, "utils", "TestServer.js"));
@@ -39,16 +39,24 @@ describe("Terminals / getAll", () => {
 
 	it("should execute mediator", () => {
 
-		return orchestrator._Mediator.getAllTerminals().then((result) => {
-			deepStrictEqual(result, [], "Terminals are not as expected");
+		return orchestrator._Mediator.getAllTerminals().then((terminals) => {
+
+			strictEqual(typeof terminals, "object", "terminals is not as expected");
+			strictEqual(terminals instanceof Array, true, "terminals is not as expected");
+				strictEqual(terminals.length, 0, "terminals is not as expected");
+
 		});
 
 	});
 
 	it("should execute http request", () => {
 
-		return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals").then((result) => {
-			deepStrictEqual(result, [], "Terminals are not as expected");
+		return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals").then((terminals) => {
+
+			strictEqual(typeof terminals, "object", "terminals is not as expected");
+			strictEqual(terminals instanceof Array, true, "terminals is not as expected");
+				strictEqual(terminals.length, 0, "terminals is not as expected");
+
 		});
 
 	});
