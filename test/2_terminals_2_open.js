@@ -13,10 +13,10 @@
 
 // consts
 
-	const TEST_NAME = "Test 1";
-	const TEST_SHELL = "cmd";
-
 	const IS_WINDOWS = "win32" === platform();
+
+	const TEST_NAME = "Test 1";
+	const TEST_SHELL = IS_WINDOWS ? "cmd" : "bash"; // dev or CI
 
 // private
 
