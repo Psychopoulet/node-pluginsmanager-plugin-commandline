@@ -5,6 +5,7 @@
 	// natives
 	const { join } = require("path");
 	const { strictEqual } = require("assert");
+	const { platform } = require("os");
 
 	// locals
 	const TestServer = require(join(__dirname, "utils", "TestServer.js"));
@@ -14,6 +15,8 @@
 
 	const TEST_NAME = "Test 1";
 	const TEST_SHELL = "cmd";
+
+	const IS_WINDOWS = "win32" === platform();
 
 // private
 
@@ -36,6 +39,17 @@
 
 				strictEqual(typeof terminal.shell, "string", "terminal.shell is not as expected");
 					strictEqual(terminal.shell, TEST_SHELL, "terminal.shell is not as expected");
+
+				strictEqual(typeof terminal.options, "object", "terminal.options is not as expected");
+
+					strictEqual(typeof terminal.options.cwd, "string", "terminal.options.cwd is not as expected");
+
+					if (IS_WINDOWS) {
+
+						strictEqual(typeof terminal.options.windowsHide, "boolean", "terminal.options.windowsHide is not as expected");
+							strictEqual(terminal.options.windowsHide, true, "terminal.options.windowsHide is not as expected");
+
+					}
 
 		}
 
@@ -76,6 +90,21 @@ describe("Terminals / getAll", () => {
 
 				strictEqual(typeof err, "object", "Generated Error is not as expected");
 				strictEqual(err instanceof ReferenceError, true, "Generated Error is not as expected");
+
+				done();
+
+			});
+
+		});
+
+		it("should test wrong data", (done) => {
+
+			orchestrator._Mediator.openTerminal(null, false).then(() => {
+				done(new Error("There is no generated Error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated Error is not as expected");
+				strictEqual(err instanceof TypeError, true, "Generated Error is not as expected");
 
 				done();
 
@@ -191,13 +220,33 @@ describe("Terminals / getAll", () => {
 
 			});
 
+			it("should test with wrong shell", (done) => {
+
+				orchestrator._Mediator.openTerminal(null, {
+					"name": TEST_NAME,
+					"shell": "acazjcnamzcmoazc"
+				}).then(() => {
+					done(new Error("There is no generated Error"));
+				}).catch((err) => {
+
+					strictEqual(typeof err, "object", "Generated Error is not as expected");
+					strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+
+					done();
+
+				});
+
+			});
+
 		});
 
 		describe("execute", () => {
 
 			it("should open a terminal", () => {
 
-				orchestrator._Mediator.once("terminal.created", _testTerminal);
+				orchestrator._Mediator.once("terminal.opened", (data) => {
+					_testTerminal(data.terminal);
+				});
 
 				return orchestrator._Mediator.openTerminal(null, {
 					"name": TEST_NAME,
@@ -257,6 +306,21 @@ describe("Terminals / getAll", () => {
 
 					strictEqual(typeof result.code, "string", "result.code is not as expected");
 						strictEqual(result.code, "MISSING_PARAMETER", "result.code is not as expected");
+
+					strictEqual(typeof result.message, "string", "result.message is not as expected");
+
+			});
+
+		});
+
+		it("should test wrong data", () => {
+
+			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", false).then((result) => {
+
+				strictEqual(typeof result, "object", "result is not as expected");
+
+					strictEqual(typeof result.code, "string", "result.code is not as expected");
+						strictEqual(result.code, "WRONG_TYPE_PARAMETER", "result.code is not as expected");
 
 					strictEqual(typeof result.message, "string", "result.message is not as expected");
 
@@ -378,6 +442,9 @@ describe("Terminals / getAll", () => {
 
 			it("should open a terminal", () => {
 
+				const events = [ "terminal.opened", "terminal.stdout" ];
+				let step = 0;
+
 				testServer.onMessage((message) => {
 
 					strictEqual(typeof message, "object", "message is not as expected");
@@ -386,9 +453,13 @@ describe("Terminals / getAll", () => {
 						strictEqual(message.plugin, orchestrator._Descriptor.info.title, "message.plugin is not as expected");
 
 						strictEqual(typeof message.command, "string", "message.command is not as expected");
-						strictEqual(message.command, "created", "message.command is not as expected");
+						strictEqual(message.command, events[step], "message.command is not as expected");
 
-					_testTerminal(message.data);
+						if (events[0] === message.command) {
+							++step;
+						}
+
+					_testTerminal(message.data.terminal);
 
 				});
 

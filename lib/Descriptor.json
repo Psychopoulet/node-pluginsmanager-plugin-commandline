@@ -81,22 +81,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"type": "object",
-								"properties": {
-									"name":  {
-										"type": "string"
-									},
-									"shell":  {
-										"type": "string"
-									},
-									"options": {
-										"$ref": "#/components/schemas/Options"
-									}
-								},
-								"required": [
-									"name",
-									"shell"
-								]
+								"$ref": "#/components/schemas/TerminalCreation"
 							}
 						}
 					}
@@ -249,16 +234,41 @@
 	},
 	"components": {
 		"schemas": {
-			"Terminal": {
+			"TerminalCreation": {
+				"description": "Data for Terminal creation",
 				"type": "object",
 				"properties": {
-					"number": {
-						"type": "integer"
-					},
 					"name": {
+						"description": "The name of the new Terminal",
 						"type": "string"
 					},
 					"shell": {
+						"description": "The shell used by the new Terminal (\"cmd\" on Windows, \"bash\" on Linux, etc...)",
+						"type": "string"
+					},
+					"options": {
+						"description": "Optional options used by the new Terminal",
+						"$ref": "#/components/schemas/Options"
+					}
+				},
+				"required": [
+					"name"
+				]
+			},
+			"Terminal": {
+				"description": "Created Terminal",
+				"type": "object",
+				"properties": {
+					"number": {
+						"description": "The number of the opened Terminal",
+						"type": "integer"
+					},
+					"name": {
+						"description": "The name of the opened Terminal",
+						"type": "string"
+					},
+					"shell": {
+						"description": "The shell used by the opened Terminal",
 						"type": "string"
 					},
 					"options": {
@@ -271,13 +281,16 @@
 				"required": [
 					"number",
 					"name",
-					"shell"
+					"shell",
+					"options"
 				]
 			},
 			"Options": {
+				"description": "https://nodejs.org/api/child_process.html#child_process_child_process_spawn_command_args_options",
 				"type": "object",
 				"properties": {
 					"cwd": {
+						"description": "default : os.homedir()",
 						"type": "string"
 					},
 					"detached": {
@@ -292,9 +305,13 @@
 					"windowsHide": {
 						"type": "boolean"
 					}
-				}
+				},
+				"required": [
+					"cwd"
+				]
 			},
 			"CommandLine": {
+				"description": "Command line currently executed by the opened Terminal",
 				"type": "object",
 				"properties": {
 					"command": {
