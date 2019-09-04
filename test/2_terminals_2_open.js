@@ -15,6 +15,30 @@
 	const TEST_NAME = "Test 1";
 	const TEST_SHELL = "cmd";
 
+// private
+
+	// methods
+
+		/**
+		* Test terminal
+		* @param {object} terminal : terminal to test
+		* @returns {void}
+		*/
+		function _testTerminal (terminal) {
+
+			strictEqual(typeof terminal, "object", "terminal is not as expected");
+
+				strictEqual(typeof terminal.number, "number", "terminal.number is not as expected");
+					strictEqual(terminal.number, 1, "terminal.number is not as expected");
+
+				strictEqual(typeof terminal.name, "string", "terminal.name is not as expected");
+					strictEqual(terminal.name, TEST_NAME, "terminal.name is not as expected");
+
+				strictEqual(typeof terminal.shell, "string", "terminal.shell is not as expected");
+					strictEqual(terminal.shell, TEST_SHELL, "terminal.shell is not as expected");
+
+		}
+
 // tests
 
 describe("Terminals / getAll", () => {
@@ -26,10 +50,10 @@ describe("Terminals / getAll", () => {
 
 		before(() => {
 
-			return testServer.init(orchestrator).then(() => {
-				return orchestrator.load();
-			}).then(() => {
+			return orchestrator.load().then(() => {
 				return orchestrator.init();
+			}).then(() => {
+				return testServer.init(orchestrator)
 			});
 
 		});
@@ -173,18 +197,14 @@ describe("Terminals / getAll", () => {
 
 			it("should open a terminal", () => {
 
+				orchestrator._Mediator.once("terminal.created", _testTerminal);
+
 				return orchestrator._Mediator.openTerminal(null, {
 					"name": TEST_NAME,
 					"shell": TEST_SHELL
-				}).then((result) => {
+				}).then((terminal) => {
 
-					strictEqual(typeof result, "object", "result is not as expected");
-					strictEqual(typeof result.number, "number", "result.number is not as expected");
-						strictEqual(result.number, 1, "result.number is not as expected");
-					strictEqual(typeof result.name, "string", "result.name is not as expected");
-						strictEqual(result.name, TEST_NAME, "result.name is not as expected");
-					strictEqual(typeof result.shell, "string", "result.shell is not as expected");
-						strictEqual(result.shell, TEST_SHELL, "result.shell is not as expected");
+					_testTerminal(terminal);
 
 					return orchestrator._Mediator.getAllTerminals();
 
@@ -194,13 +214,7 @@ describe("Terminals / getAll", () => {
 					strictEqual(terminals instanceof Array, true, "terminals is not as expected");
 						strictEqual(terminals.length, 1, "terminals is not as expected");
 
-					strictEqual(typeof terminals[0], "object", "terminals[0] is not as expected");
-					strictEqual(typeof terminals[0].number, "number", "terminals[0].number is not as expected");
-						strictEqual(terminals[0].number, 1, "terminals[0].number is not as expected");
-					strictEqual(typeof terminals[0].name, "string", "terminals[0].name is not as expected");
-						strictEqual(terminals[0].name, TEST_NAME, "terminals[0].name is not as expected");
-					strictEqual(typeof terminals[0].shell, "string", "terminals[0].shell is not as expected");
-						strictEqual(terminals[0].shell, TEST_SHELL, "terminals[0].shell is not as expected");
+					_testTerminal(terminals[0]);
 
 				});
 
@@ -240,9 +254,11 @@ describe("Terminals / getAll", () => {
 			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put").then((result) => {
 
 				strictEqual(typeof result, "object", "result is not as expected");
-				strictEqual(typeof result.code, "string", "result.code is not as expected");
-					strictEqual(result.code, "MISSING_PARAMETER", "result.code is not as expected");
-				strictEqual(typeof result.message, "string", "result.message is not as expected");
+
+					strictEqual(typeof result.code, "string", "result.code is not as expected");
+						strictEqual(result.code, "MISSING_PARAMETER", "result.code is not as expected");
+
+					strictEqual(typeof result.message, "string", "result.message is not as expected");
 
 			});
 
@@ -255,9 +271,11 @@ describe("Terminals / getAll", () => {
 				return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {}).then((result) => {
 
 					strictEqual(typeof result, "object", "result is not as expected");
-					strictEqual(typeof result.code, "string", "result.code is not as expected");
-						strictEqual(result.code, "MISSING_PARAMETER", "result.code is not as expected");
-					strictEqual(typeof result.message, "string", "result.message is not as expected");
+
+						strictEqual(typeof result.code, "string", "result.code is not as expected");
+							strictEqual(result.code, "MISSING_PARAMETER", "result.code is not as expected");
+
+						strictEqual(typeof result.message, "string", "result.message is not as expected");
 
 				});
 
@@ -270,9 +288,11 @@ describe("Terminals / getAll", () => {
 				}).then((result) => {
 
 					strictEqual(typeof result, "object", "result is not as expected");
-					strictEqual(typeof result.code, "string", "result.code is not as expected");
-						strictEqual(result.code, "WRONG_TYPE_PARAMETER", "result.code is not as expected");
-					strictEqual(typeof result.message, "string", "result.message is not as expected");
+
+						strictEqual(typeof result.code, "string", "result.code is not as expected");
+							strictEqual(result.code, "WRONG_TYPE_PARAMETER", "result.code is not as expected");
+
+						strictEqual(typeof result.message, "string", "result.message is not as expected");
 
 				});
 
@@ -285,9 +305,11 @@ describe("Terminals / getAll", () => {
 				}).then((result) => {
 
 					strictEqual(typeof result, "object", "result is not as expected");
-					strictEqual(typeof result.code, "string", "result.code is not as expected");
-						strictEqual(result.code, "RANGE_OR_EMPTY_PARAMETER", "result.code is not as expected");
-					strictEqual(typeof result.message, "string", "result.message is not as expected");
+
+						strictEqual(typeof result.code, "string", "result.code is not as expected");
+							strictEqual(result.code, "RANGE_OR_EMPTY_PARAMETER", "result.code is not as expected");
+
+						strictEqual(typeof result.message, "string", "result.message is not as expected");
 
 				});
 
@@ -304,9 +326,11 @@ describe("Terminals / getAll", () => {
 				}).then((result) => {
 
 					strictEqual(typeof result, "object", "result is not as expected");
-					strictEqual(typeof result.code, "string", "result.code is not as expected");
-						strictEqual(result.code, "MISSING_PARAMETER", "result.code is not as expected");
-					strictEqual(typeof result.message, "string", "result.message is not as expected");
+
+						strictEqual(typeof result.code, "string", "result.code is not as expected");
+							strictEqual(result.code, "MISSING_PARAMETER", "result.code is not as expected");
+
+						strictEqual(typeof result.message, "string", "result.message is not as expected");
 
 				});
 
@@ -320,9 +344,11 @@ describe("Terminals / getAll", () => {
 				}).then((result) => {
 
 					strictEqual(typeof result, "object", "result is not as expected");
-					strictEqual(typeof result.code, "string", "result.code is not as expected");
-						strictEqual(result.code, "WRONG_TYPE_PARAMETER", "result.code is not as expected");
-					strictEqual(typeof result.message, "string", "result.message is not as expected");
+
+						strictEqual(typeof result.code, "string", "result.code is not as expected");
+							strictEqual(result.code, "WRONG_TYPE_PARAMETER", "result.code is not as expected");
+
+						strictEqual(typeof result.message, "string", "result.message is not as expected");
 
 				});
 
@@ -336,9 +362,11 @@ describe("Terminals / getAll", () => {
 				}).then((result) => {
 
 					strictEqual(typeof result, "object", "result is not as expected");
-					strictEqual(typeof result.code, "string", "result.code is not as expected");
-						strictEqual(result.code, "RANGE_OR_EMPTY_PARAMETER", "result.code is not as expected");
-					strictEqual(typeof result.message, "string", "result.message is not as expected");
+
+						strictEqual(typeof result.code, "string", "result.code is not as expected");
+							strictEqual(result.code, "RANGE_OR_EMPTY_PARAMETER", "result.code is not as expected");
+
+						strictEqual(typeof result.message, "string", "result.message is not as expected");
 
 				});
 
@@ -350,18 +378,26 @@ describe("Terminals / getAll", () => {
 
 			it("should open a terminal", () => {
 
+				testServer.onMessage((message) => {
+
+					strictEqual(typeof message, "object", "message is not as expected");
+
+						strictEqual(typeof message.plugin, "string", "message.plugin is not as expected");
+						strictEqual(message.plugin, orchestrator._Descriptor.info.title, "message.plugin is not as expected");
+
+						strictEqual(typeof message.command, "string", "message.command is not as expected");
+						strictEqual(message.command, "created", "message.command is not as expected");
+
+					_testTerminal(message.data);
+
+				});
+
 				return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
 					"name": TEST_NAME,
 					"shell": TEST_SHELL
-				}).then((result) => {
+				}).then((terminal) => {
 
-					strictEqual(typeof result, "object", "result is not as expected");
-					strictEqual(typeof result.number, "number", "result.number is not as expected");
-						strictEqual(result.number, 1, "result.number is not as expected");
-					strictEqual(typeof result.name, "string", "result.name is not as expected");
-						strictEqual(result.name, TEST_NAME, "result.name is not as expected");
-					strictEqual(typeof result.shell, "string", "result.shell is not as expected");
-						strictEqual(result.shell, TEST_SHELL, "result.shell is not as expected");
+					_testTerminal(terminal);
 
 					return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "get");
 
@@ -371,13 +407,7 @@ describe("Terminals / getAll", () => {
 					strictEqual(terminals instanceof Array, true, "terminals is not as expected");
 						strictEqual(terminals.length, 1, "terminals is not as expected");
 
-					strictEqual(typeof terminals[0], "object", "terminals[0] is not as expected");
-					strictEqual(typeof terminals[0].number, "number", "terminals[0].number is not as expected");
-						strictEqual(terminals[0].number, 1, "terminals[0].number is not as expected");
-					strictEqual(typeof terminals[0].name, "string", "terminals[0].name is not as expected");
-						strictEqual(terminals[0].name, TEST_NAME, "terminals[0].name is not as expected");
-					strictEqual(typeof terminals[0].shell, "string", "terminals[0].shell is not as expected");
-						strictEqual(terminals[0].shell, TEST_SHELL, "terminals[0].shell is not as expected");
+					_testTerminal(terminals[0]);
 
 				});
 

@@ -169,12 +169,20 @@ module.exports = class TestServer {
 
 	}
 
-	push (data) {
+	onMessage (callback) {
+
+		this._websocketClient.on("message", (data) => {
+			callback(JSON.parse(data));
+		});
+
+	}
+
+	emit (data) {
 
 		// connection
 		return new Promise((resolve) => {
 
-			this._websocketClient.on("open", () => {
+			this._websocketClient.once("open", () => {
 
 				(0, console).log("client", "socket", "open");
 
@@ -192,7 +200,7 @@ module.exports = class TestServer {
 
 			return new Promise((resolve) => {
 
-				this._websocketClient.on("close", () => {
+				this._websocketClient.once("close", () => {
 
 					(0, console).log("client", "socket", "close");
 

@@ -19,10 +19,10 @@ describe("Terminals / getAll", () => {
 
 	before(() => {
 
-		return testServer.init(orchestrator).then(() => {
-			return orchestrator.load();
-		}).then(() => {
+		return orchestrator.load().then(() => {
 			return orchestrator.init();
+		}).then(() => {
+			return testServer.init(orchestrator)
 		});
 
 	});
