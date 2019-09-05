@@ -140,14 +140,21 @@ module.exports = class TestServer {
 
 			const req = request(opts, (res) => {
 
-				res.setEncoding("utf8");
+				if (404 === res.statusCode) {
+					reject(new Error("\"" + urlpath + "\" not found"));
+				}
+				else {
 
-				let rawData = "";
-				res.on("data", (chunk) => {
-					rawData += chunk;
-				}).on("end", () => {
-					resolve(rawData);
-				});
+					res.setEncoding("utf8");
+
+					let rawData = "";
+					res.on("data", (chunk) => {
+						rawData += chunk;
+					}).on("end", () => {
+						resolve(rawData);
+					});
+
+				}
 
 			});
 
@@ -173,43 +180,6 @@ module.exports = class TestServer {
 
 		this._websocketClient.on("message", (data) => {
 			callback(JSON.parse(data));
-		});
-
-	}
-
-	emit (data) {
-
-		// connection
-		return new Promise((resolve) => {
-
-			this._websocketClient.once("open", () => {
-
-				(0, console).log("client", "socket", "open");
-
-				resolve();
-
-			});
-
-		// send
-		}).then(() => {
-
-			this._websocketClient.send(JSON.stringify(data));
-
-		// send
-		}).then(() => {
-
-			return new Promise((resolve) => {
-
-				this._websocketClient.once("close", () => {
-
-					(0, console).log("client", "socket", "close");
-
-					resolve();
-
-				}).close();
-
-			});
-
 		});
 
 	}
