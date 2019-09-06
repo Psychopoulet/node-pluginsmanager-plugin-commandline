@@ -7,8 +7,15 @@
 	const { strictEqual } = require("assert");
 
 	// locals
+	const getShell = require(join(__dirname, "utils", "getShell.js"));
+	const testTerminal = require(join(__dirname, "utils", "testTerminal.js"));
 	const TestServer = require(join(__dirname, "utils", "TestServer.js"));
 	const Orchestrator = require(join(__dirname, "..", "lib", "Orchestrator.js"));
+
+// consts
+
+	const TEST_NAME = "Test 1";
+	const TEST_SHELL = getShell(); // dev or CI
 
 // tests
 
@@ -17,12 +24,18 @@ describe("Terminals / close / Mediator", () => {
 	const orchestrator = new Orchestrator();
 	const testServer = new TestServer();
 
+	let mediator = null;
+
 	before(() => {
 
 		return orchestrator.load().then(() => {
 			return orchestrator.init();
 		}).then(() => {
+
+			mediator = orchestrator._Mediator;
+
 			return testServer.init(orchestrator);
+
 		});
 
 	});
@@ -39,7 +52,7 @@ describe("Terminals / close / Mediator", () => {
 
 	it("should test without data", (done) => {
 
-		orchestrator._Mediator.closeTerminal().then(() => {
+		mediator.closeTerminal().then(() => {
 			done(new Error("There is no generated Error"));
 		}).catch((err) => {
 
@@ -54,7 +67,7 @@ describe("Terminals / close / Mediator", () => {
 
 	it("should test wrong data", (done) => {
 
-		orchestrator._Mediator.closeTerminal(false).then(() => {
+		mediator.closeTerminal(false).then(() => {
 			done(new Error("There is no generated Error"));
 		}).catch((err) => {
 
@@ -71,7 +84,7 @@ describe("Terminals / close / Mediator", () => {
 
 		it("should test without terminalnumber", (done) => {
 
-			orchestrator._Mediator.closeTerminal({}).then(() => {
+			mediator.closeTerminal({}).then(() => {
 				done(new Error("There is no generated Error"));
 			}).catch((err) => {
 
@@ -86,7 +99,7 @@ describe("Terminals / close / Mediator", () => {
 
 		it("should test with wrong terminalnumber", (done) => {
 
-			orchestrator._Mediator.closeTerminal({
+			mediator.closeTerminal({
 				"terminalnumber": false
 			}).then(() => {
 				done(new Error("There is no generated Error"));
@@ -103,7 +116,7 @@ describe("Terminals / close / Mediator", () => {
 
 		it("should test with empty terminalnumber", (done) => {
 
-			orchestrator._Mediator.closeTerminal({
+			mediator.closeTerminal({
 				"terminalnumber": 0
 			}).then(() => {
 				done(new Error("There is no generated Error"));
@@ -115,6 +128,76 @@ describe("Terminals / close / Mediator", () => {
 				done();
 
 			});
+
+		});
+
+		it("should test with inexistant terminal", () => {
+
+			return mediator.closeTerminal({
+				"terminalnumber": 1
+			}).then((data) => {
+
+				strictEqual(typeof data, "undefined", "returned data is not as expected");
+
+			});
+
+		});
+
+	});
+
+	describe("execute", () => {
+
+		it("should open a terminal", (done) => {
+
+			let success = 0;
+
+			/**
+			* Fire end of test
+			* @returns {Promise} : operation result
+			*/
+			function _end () {
+
+				++success;
+				if (2 === success) {
+					done();
+				}
+
+			}
+
+			mediator.once("terminal.closed", (data) => {
+
+				testTerminal(data.terminal);
+
+				_end();
+
+			});
+
+			mediator.openTerminal(null, {
+				"name": TEST_NAME,
+				"shell": TEST_SHELL
+			}).then((terminal) => {
+
+				testTerminal(terminal);
+
+				return mediator.closeTerminal({
+					"terminalnumber": terminal.number
+				});
+
+			}).then((data) => {
+
+				strictEqual(typeof data, "undefined", "returned data is not as expected");
+
+				return mediator.getAllTerminals();
+
+			}).then((terminals) => {
+
+				strictEqual(typeof terminals, "object", "terminals is not as expected");
+				strictEqual(terminals instanceof Array, true, "terminals is not as expected");
+					strictEqual(terminals.length, 0, "terminals is not as expected");
+
+				_end();
+
+			}).catch(done);
 
 		});
 

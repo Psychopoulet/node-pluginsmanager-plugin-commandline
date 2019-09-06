@@ -4,6 +4,7 @@
 
 	// natives
 	const { join } = require("path");
+	const { strictEqual } = require("assert");
 
 	// locals
 	const getShell = require(join(__dirname, "utils", "getShell.js"));
@@ -39,6 +40,21 @@ describe("Terminals / getOne / Server", () => {
 			return orchestrator.release();
 		}).then(() => {
 			return orchestrator.destroy();
+		});
+
+	});
+
+	it("should test with inexistant terminal", (done) => {
+
+		testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals/1", "get").then(() => {
+			done(new Error("There is no generated Error"));
+		}).catch((err) => {
+
+			strictEqual(typeof err, "object", "Generated Error is not as expected");
+			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+
+			done();
+
 		});
 
 	});

@@ -4,6 +4,7 @@
 
 	// natives
 	const { join } = require("path");
+	const { strictEqual } = require("assert");
 
 	// locals
 	const getShell = require(join(__dirname, "utils", "getShell.js"));
@@ -23,12 +24,18 @@ describe("Terminals / getOne / Mediator", () => {
 	const orchestrator = new Orchestrator();
 	const testServer = new TestServer();
 
+	let mediator = null;
+
 	before(() => {
 
 		return orchestrator.load().then(() => {
 			return orchestrator.init();
 		}).then(() => {
+
+			mediator = orchestrator._Mediator;
+
 			return testServer.init(orchestrator);
+
 		});
 
 	});
@@ -43,20 +50,90 @@ describe("Terminals / getOne / Mediator", () => {
 
 	});
 
-	it("should execute mediator", () => {
+	describe("terminalnumber", () => {
 
-		return orchestrator._Mediator.openTerminal(null, {
-			"name": TEST_NAME,
-			"shell": TEST_SHELL
-		}).then((terminal) => {
+		it("should test without terminalnumber", (done) => {
 
-			return orchestrator._Mediator.getOneTerminal({
-				"terminalnumber": terminal.number
+			mediator.getOneTerminal({}).then(() => {
+				done(new Error("There is no generated Error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated Error is not as expected");
+				strictEqual(err instanceof ReferenceError, true, "Generated Error is not as expected");
+
+				done();
+
 			});
 
-		}).then((terminal) => {
+		});
 
-			testTerminal(terminal);
+		it("should test with wrong terminalnumber", (done) => {
+
+			mediator.getOneTerminal({
+				"terminalnumber": false
+			}).then(() => {
+				done(new Error("There is no generated Error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated Error is not as expected");
+				strictEqual(err instanceof TypeError, true, "Generated Error is not as expected");
+
+				done();
+
+			});
+
+		});
+
+		it("should test with empty terminalnumber", (done) => {
+
+			mediator.getOneTerminal({
+				"terminalnumber": 0
+			}).then(() => {
+				done(new Error("There is no generated Error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated Error is not as expected");
+				strictEqual(err instanceof RangeError, true, "Generated Error is not as expected");
+
+				done();
+
+			});
+
+		});
+
+		it("should test with inexistant terminal", () => {
+
+			return mediator.getOneTerminal({
+				"terminalnumber": 1
+			}).then((terminal) => {
+
+				strictEqual(typeof terminal, "object", "terminal is not as expected");
+				strictEqual(terminal, null, "terminal is not as expected");
+
+			});
+
+		});
+
+	});
+
+	describe("execute", () => {
+
+		it("should execute mediator", () => {
+
+			return mediator.openTerminal(null, {
+				"name": TEST_NAME,
+				"shell": TEST_SHELL
+			}).then((terminal) => {
+
+				return mediator.getOneTerminal({
+					"terminalnumber": terminal.number
+				});
+
+			}).then((terminal) => {
+
+				testTerminal(terminal);
+
+			});
 
 		});
 

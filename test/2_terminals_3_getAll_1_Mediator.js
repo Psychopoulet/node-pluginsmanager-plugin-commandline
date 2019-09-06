@@ -24,12 +24,18 @@ describe("Terminals / getAll / Mediator", () => {
 	const orchestrator = new Orchestrator();
 	const testServer = new TestServer();
 
+	let mediator = null;
+
 	before(() => {
 
 		return orchestrator.load().then(() => {
 			return orchestrator.init();
 		}).then(() => {
+
+			mediator = orchestrator._Mediator;
+
 			return testServer.init(orchestrator);
+
 		});
 
 	});
@@ -46,11 +52,11 @@ describe("Terminals / getAll / Mediator", () => {
 
 	it("should execute mediator", () => {
 
-		return orchestrator._Mediator.openTerminal(null, {
+		return mediator.openTerminal(null, {
 			"name": TEST_NAME,
 			"shell": TEST_SHELL
 		}).then(() => {
-			return orchestrator._Mediator.getAllTerminals();
+			return mediator.getAllTerminals();
 		}).then((terminals) => {
 
 			strictEqual(typeof terminals, "object", "terminals is not as expected");

@@ -24,12 +24,18 @@ describe("Terminals / open / Mediator", () => {
 	const orchestrator = new Orchestrator();
 	const testServer = new TestServer();
 
+	let mediator = null;
+
 	before(() => {
 
 		return orchestrator.load().then(() => {
 			return orchestrator.init();
 		}).then(() => {
+
+			mediator = orchestrator._Mediator;
+
 			return testServer.init(orchestrator);
+
 		});
 
 	});
@@ -46,7 +52,7 @@ describe("Terminals / open / Mediator", () => {
 
 	it("should test without data", (done) => {
 
-		orchestrator._Mediator.openTerminal().then(() => {
+		mediator.openTerminal().then(() => {
 			done(new Error("There is no generated Error"));
 		}).catch((err) => {
 
@@ -61,7 +67,7 @@ describe("Terminals / open / Mediator", () => {
 
 	it("should test wrong data", (done) => {
 
-		orchestrator._Mediator.openTerminal(null, false).then(() => {
+		mediator.openTerminal(null, false).then(() => {
 			done(new Error("There is no generated Error"));
 		}).catch((err) => {
 
@@ -78,7 +84,7 @@ describe("Terminals / open / Mediator", () => {
 
 		it("should test without name", (done) => {
 
-			orchestrator._Mediator.openTerminal(null, {}).then(() => {
+			mediator.openTerminal(null, {}).then(() => {
 				done(new Error("There is no generated Error"));
 			}).catch((err) => {
 
@@ -93,7 +99,7 @@ describe("Terminals / open / Mediator", () => {
 
 		it("should test with wrong name", (done) => {
 
-			orchestrator._Mediator.openTerminal(null, {
+			mediator.openTerminal(null, {
 				"name": false
 			}).then(() => {
 				done(new Error("There is no generated Error"));
@@ -110,7 +116,7 @@ describe("Terminals / open / Mediator", () => {
 
 		it("should test with empty name", (done) => {
 
-			orchestrator._Mediator.openTerminal(null, {
+			mediator.openTerminal(null, {
 				"name": ""
 			}).then(() => {
 				done(new Error("There is no generated Error"));
@@ -131,7 +137,7 @@ describe("Terminals / open / Mediator", () => {
 
 		it("should test without shell", (done) => {
 
-			orchestrator._Mediator.openTerminal(null, {
+			mediator.openTerminal(null, {
 				"name": TEST_NAME
 			}).then(() => {
 				done(new Error("There is no generated Error"));
@@ -148,7 +154,7 @@ describe("Terminals / open / Mediator", () => {
 
 		it("should test with wrong shell", (done) => {
 
-			orchestrator._Mediator.openTerminal(null, {
+			mediator.openTerminal(null, {
 				"name": TEST_NAME,
 				"shell": false
 			}).then(() => {
@@ -166,7 +172,7 @@ describe("Terminals / open / Mediator", () => {
 
 		it("should test with empty shell", (done) => {
 
-			orchestrator._Mediator.openTerminal(null, {
+			mediator.openTerminal(null, {
 				"name": TEST_NAME,
 				"shell": ""
 			}).then(() => {
@@ -184,7 +190,7 @@ describe("Terminals / open / Mediator", () => {
 
 		it("should test with wrong shell", (done) => {
 
-			orchestrator._Mediator.openTerminal(null, {
+			mediator.openTerminal(null, {
 				"name": TEST_NAME,
 				"shell": "acazjcnamzcmoazc"
 			}).then(() => {
@@ -208,25 +214,35 @@ describe("Terminals / open / Mediator", () => {
 
 			let success = 0;
 
-			orchestrator._Mediator.once("terminal.opened", (data) => {
-
-				testTerminal(data.terminal);
+			/**
+			* Fire end of test
+			* @returns {Promise} : operation result
+			*/
+			function _end () {
 
 				++success;
 				if (2 === success) {
 					done();
 				}
 
+			}
+
+			mediator.once("terminal.opened", (data) => {
+
+				testTerminal(data.terminal);
+
+				_end();
+
 			});
 
-			orchestrator._Mediator.openTerminal(null, {
+			mediator.openTerminal(null, {
 				"name": TEST_NAME,
 				"shell": TEST_SHELL
 			}).then((terminal) => {
 
 				testTerminal(terminal);
 
-				return orchestrator._Mediator.getAllTerminals();
+				return mediator.getAllTerminals();
 
 			}).then((terminals) => {
 
@@ -236,10 +252,7 @@ describe("Terminals / open / Mediator", () => {
 
 				testTerminal(terminals[0]);
 
-				++success;
-				if (2 === success) {
-					done();
-				}
+				_end();
 
 			}).catch(done);
 
