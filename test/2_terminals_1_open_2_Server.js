@@ -190,7 +190,21 @@ describe("Terminals / open / Server", () => {
 
 			const events = [ "terminal.opened", "terminal.stdout" ];
 			let step = 0;
+
 			let success = 0;
+
+			/**
+			* Fire end of test
+			* @returns {Promise} : operation result
+			*/
+			function _end () {
+
+				++success;
+				if (2 === success) {
+					done();
+				}
+
+			}
 
 			testServer.onMessage((message) => {
 
@@ -208,10 +222,7 @@ describe("Terminals / open / Server", () => {
 
 					++step;
 
-					++success;
-					if (2 === success) {
-						done();
-					}
+					_end();
 
 				}
 
@@ -234,12 +245,7 @@ describe("Terminals / open / Server", () => {
 
 				testTerminal(terminals[0]);
 
-			}).then(() => {
-
-				++success;
-				if (2 === success) {
-					done();
-				}
+				_end();
 
 			}).catch(done);
 

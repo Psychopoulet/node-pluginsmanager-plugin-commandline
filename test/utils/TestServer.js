@@ -141,7 +141,7 @@ module.exports = class TestServer {
 			const req = request(opts, (res) => {
 
 				if (404 === res.statusCode) {
-					reject(new Error("\"" + urlpath + "\" not found"));
+					reject(new RangeError("\"" + urlpath + "\" not found"));
 				}
 				else {
 

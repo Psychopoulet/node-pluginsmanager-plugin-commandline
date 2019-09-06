@@ -44,33 +44,71 @@ describe("Terminals / getOne / Server", () => {
 
 	});
 
-	it("should test with inexistant terminal", (done) => {
+	describe("terminalnumber", () => {
 
-		testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals/1", "get").then(() => {
-			done(new Error("There is no generated Error"));
-		}).catch((err) => {
+		it("should test with wrong terminalnumber", (done) => {
 
-			strictEqual(typeof err, "object", "Generated Error is not as expected");
-			strictEqual(err instanceof Error, true, "Generated Error is not as expected");
+			testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals/false", "get").then(() => {
+				done(new Error("There is no generated Error"));
+			}).catch((err) => {
 
-			done();
+				strictEqual(typeof err, "object", "Generated Error is not as expected");
+				strictEqual(err instanceof RangeError, true, "Generated Error is not as expected");
+
+				done();
+
+			});
+
+		});
+
+		it("should test with empty terminal", (done) => {
+
+			testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals/0", "get").then(() => {
+				done(new Error("There is no generated Error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated Error is not as expected");
+				strictEqual(err instanceof RangeError, true, "Generated Error is not as expected");
+
+				done();
+
+			});
+
+		});
+
+		it("should test with inexistant terminal", (done) => {
+
+			testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals/1", "get").then(() => {
+				done(new Error("There is no generated Error"));
+			}).catch((err) => {
+
+				strictEqual(typeof err, "object", "Generated Error is not as expected");
+				strictEqual(err instanceof RangeError, true, "Generated Error is not as expected");
+
+				done();
+
+			});
 
 		});
 
 	});
 
-	it("should execute http request", () => {
+	describe("execute", () => {
 
-		return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
-			"name": TEST_NAME,
-			"shell": TEST_SHELL
-		}).then((terminal) => {
+		it("should execute http request", () => {
 
-			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals/" + terminal.number, "get");
+			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
+				"name": TEST_NAME,
+				"shell": TEST_SHELL
+			}).then((terminal) => {
 
-		}).then((terminal) => {
+				return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals/" + terminal.number, "get");
 
-			testTerminal(terminal);
+			}).then((terminal) => {
+
+				testTerminal(terminal);
+
+			});
 
 		});
 
