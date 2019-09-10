@@ -35,7 +35,7 @@
     "url": "https://github.com/Psychopoulet/node-pluginsmanager-plugin-terminals/issues"
   },
   "dependencies": {
-    "node-pluginsmanager-plugin": "~3.0.1"
+    "node-pluginsmanager-plugin": "~3.0.3"
   },
   "devDependencies": {
     "@types/node": "12.7.4",

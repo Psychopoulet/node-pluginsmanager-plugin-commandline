@@ -188,9 +188,6 @@ describe("Terminals / open / Server", () => {
 
 		it("should open a terminal", (done) => {
 
-			const events = [ "terminal.opened", "terminal.stdout" ];
-			let step = 0;
-
 			let success = 0;
 
 			/**
@@ -214,16 +211,11 @@ describe("Terminals / open / Server", () => {
 					strictEqual(message.plugin, orchestrator._Descriptor.info.title, "message.plugin is not as expected");
 
 					strictEqual(typeof message.command, "string", "message.command is not as expected");
-					strictEqual(message.command, events[step], "message.command is not as expected");
 
 				testTerminal(message.data.terminal);
 
-				if (events[0] === message.command) {
-
-					++step;
-
+				if ("terminal.opened" === message.command) {
 					_end();
-
 				}
 
 			});
