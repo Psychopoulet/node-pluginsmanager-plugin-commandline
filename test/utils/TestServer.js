@@ -140,21 +140,14 @@ module.exports = class TestServer {
 
 			const req = request(opts, (res) => {
 
-				if (404 === res.statusCode) {
-					reject(new RangeError("\"" + urlpath + "\" not found"));
-				}
-				else {
+				res.setEncoding("utf8");
 
-					res.setEncoding("utf8");
-
-					let rawData = "";
-					res.on("data", (chunk) => {
-						rawData += chunk;
-					}).on("end", () => {
-						resolve(rawData);
-					});
-
-				}
+				let rawData = "";
+				res.on("data", (chunk) => {
+					rawData += chunk;
+				}).on("end", () => {
+					resolve(rawData);
+				});
 
 			});
 

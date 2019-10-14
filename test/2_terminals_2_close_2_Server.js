@@ -44,39 +44,43 @@ describe("Terminals / close / Server", () => {
 
 	});
 
-	it("should test without data", () => {
+	describe("terminalnumber", () => {
 
-		return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals/", "delete").then((result) => {
+		it("should test wrong data", () => {
 
-			strictEqual(typeof result, "object", "result is not as expected");
+			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals/test", "delete").then((result) => {
 
-				strictEqual(typeof result.code, "string", "result.code is not as expected");
-					strictEqual(result.code, "MISSING_PARAMETER", "result.code is not as expected");
+				strictEqual(typeof result, "object", "result is not as expected");
 
-				strictEqual(typeof result.message, "string", "result.message is not as expected");
+					strictEqual(typeof result.code, "string", "result.code is not as expected");
+						strictEqual(result.code, "WRONG_TYPE_PARAMETER", "result.code is not as expected");
 
-		});
+					strictEqual(typeof result.message, "string", "result.message is not as expected");
 
-	});
-
-	it("should test wrong data", () => {
-
-		return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals/test", "delete").then((result) => {
-
-			strictEqual(typeof result, "object", "result is not as expected");
-
-				strictEqual(typeof result.code, "string", "result.code is not as expected");
-					strictEqual(result.code, "WRONG_TYPE_PARAMETER", "result.code is not as expected");
-
-				strictEqual(typeof result.message, "string", "result.message is not as expected");
+			});
 
 		});
 
-	});
+		it("should test with empty terminal", () => {
 
-	it("should test with inexistant terminal", () => {
+			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals/0", "delete").then((result) => {
 
-		return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals/1", "delete");
+				strictEqual(typeof result, "object", "result is not as expected");
+
+					strictEqual(typeof result.code, "string", "result.code is not as expected");
+						strictEqual(result.code, "RANGE_OR_EMPTY_PARAMETER", "result.code is not as expected");
+
+					strictEqual(typeof result.message, "string", "result.message is not as expected");
+
+			});
+
+		});
+
+		it("should test with inexistant terminal", () => {
+
+			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals/1", "delete");
+
+		});
 
 	});
 

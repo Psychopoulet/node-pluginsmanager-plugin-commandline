@@ -200,7 +200,6 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"type": "object",
 								"$ref": "#/components/schemas/CommandLine"
 							}
 						}
@@ -247,7 +246,6 @@
 						"type": "string"
 					},
 					"options": {
-						"description": "Optional options used by the new Terminal",
 						"$ref": "#/components/schemas/Options"
 					}
 				},

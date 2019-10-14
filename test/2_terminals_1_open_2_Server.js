@@ -59,21 +59,6 @@ describe("Terminals / open / Server", () => {
 
 	});
 
-	it("should test wrong data", () => {
-
-		return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", false).then((result) => {
-
-			strictEqual(typeof result, "object", "result is not as expected");
-
-				strictEqual(typeof result.code, "string", "result.code is not as expected");
-					strictEqual(result.code, "WRONG_TYPE_PARAMETER", "result.code is not as expected");
-
-				strictEqual(typeof result.message, "string", "result.message is not as expected");
-
-		});
-
-	});
-
 	describe("name", () => {
 
 		it("should test without name", () => {

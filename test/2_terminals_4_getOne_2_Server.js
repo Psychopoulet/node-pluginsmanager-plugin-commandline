@@ -46,46 +46,42 @@ describe("Terminals / getOne / Server", () => {
 
 	describe("terminalnumber", () => {
 
-		it("should test with wrong terminalnumber", (done) => {
+		it("should test with wrong data", () => {
 
-			testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals/false", "get").then(() => {
-				done(new Error("There is no generated Error"));
-			}).catch((err) => {
+			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals/test", "get").then((result) => {
 
-				strictEqual(typeof err, "object", "Generated Error is not as expected");
-				strictEqual(err instanceof RangeError, true, "Generated Error is not as expected");
+				strictEqual(typeof result, "object", "result is not as expected");
 
-				done();
+					strictEqual(typeof result.code, "string", "result.code is not as expected");
+						strictEqual(result.code, "WRONG_TYPE_PARAMETER", "result.code is not as expected");
 
-			});
-
-		});
-
-		it("should test with empty terminal", (done) => {
-
-			testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals/0", "get").then(() => {
-				done(new Error("There is no generated Error"));
-			}).catch((err) => {
-
-				strictEqual(typeof err, "object", "Generated Error is not as expected");
-				strictEqual(err instanceof RangeError, true, "Generated Error is not as expected");
-
-				done();
+					strictEqual(typeof result.message, "string", "result.message is not as expected");
 
 			});
 
 		});
 
-		it("should test with inexistant terminal", (done) => {
+		it("should test with empty terminal", () => {
 
-			testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals/1", "get").then(() => {
-				done(new Error("There is no generated Error"));
-			}).catch((err) => {
+			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals/0", "get").then((result) => {
 
-				strictEqual(typeof err, "object", "Generated Error is not as expected");
-				strictEqual(err instanceof RangeError, true, "Generated Error is not as expected");
+				strictEqual(typeof result, "object", "result is not as expected");
 
-				done();
+					strictEqual(typeof result.code, "string", "result.code is not as expected");
+						strictEqual(result.code, "RANGE_OR_EMPTY_PARAMETER", "result.code is not as expected");
+
+					strictEqual(typeof result.message, "string", "result.message is not as expected");
+
+			});
+
+		});
+
+		it("should test with inexistant terminal", () => {
+
+			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals/1", "get").then((result) => {
+
+				strictEqual(typeof result, "object", "result is not as expected");
+					strictEqual(result, null, "result is not as expected");
 
 			});
 
@@ -95,12 +91,14 @@ describe("Terminals / getOne / Server", () => {
 
 	describe("execute", () => {
 
-		it("should execute http request", () => {
+		it("should get one terminal", () => {
 
 			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
 				"name": TEST_NAME,
 				"shell": TEST_SHELL
 			}).then((terminal) => {
+
+				testTerminal(terminal);
 
 				return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals/" + terminal.number, "get");
 
