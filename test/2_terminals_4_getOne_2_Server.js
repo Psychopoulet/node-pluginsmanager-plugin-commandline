@@ -76,7 +76,7 @@ describe("Terminals / getOne / Server", () => {
 
 		});
 
-		it("should test with inexistant terminal", () => {
+		it("should test with inexistant data", () => {
 
 			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals/1", "get").then((result) => {
 
@@ -91,7 +91,7 @@ describe("Terminals / getOne / Server", () => {
 
 	describe("execute", () => {
 
-		it("should get one terminal", () => {
+		it("should get one data", () => {
 
 			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
 				"name": TEST_NAME,

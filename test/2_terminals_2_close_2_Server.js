@@ -46,7 +46,7 @@ describe("Terminals / close / Server", () => {
 
 	describe("terminalnumber", () => {
 
-		it("should test wrong data", () => {
+		it("should test wrong type data", () => {
 
 			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals/test", "delete").then((result) => {
 
@@ -61,7 +61,7 @@ describe("Terminals / close / Server", () => {
 
 		});
 
-		it("should test with empty terminal", () => {
+		it("should test with empty data", () => {
 
 			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals/0", "delete").then((result) => {
 
@@ -76,7 +76,7 @@ describe("Terminals / close / Server", () => {
 
 		});
 
-		it("should test with inexistant terminal", () => {
+		it("should test with inexistant data", () => {
 
 			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals/1", "delete");
 

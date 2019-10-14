@@ -61,7 +61,7 @@ describe("Terminals / open / Server", () => {
 
 	describe("name", () => {
 
-		it("should test without name", () => {
+		it("should test without data", () => {
 
 			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {}).then((result) => {
 
@@ -76,7 +76,7 @@ describe("Terminals / open / Server", () => {
 
 		});
 
-		it("should test with wrong name", () => {
+		it("should test with wrong type data", () => {
 
 			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
 				"name": false
@@ -93,10 +93,44 @@ describe("Terminals / open / Server", () => {
 
 		});
 
-		it("should test with empty name", () => {
+		it("should test with empty data", () => {
 
 			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
 				"name": ""
+			}).then((result) => {
+
+				strictEqual(typeof result, "object", "result is not as expected");
+
+					strictEqual(typeof result.code, "string", "result.code is not as expected");
+						strictEqual(result.code, "RANGE_OR_EMPTY_PARAMETER", "result.code is not as expected");
+
+					strictEqual(typeof result.message, "string", "result.message is not as expected");
+
+			});
+
+		});
+
+		it("should test with too short data", () => {
+
+			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
+				"name": "te"
+			}).then((result) => {
+
+				strictEqual(typeof result, "object", "result is not as expected");
+
+					strictEqual(typeof result.code, "string", "result.code is not as expected");
+						strictEqual(result.code, "RANGE_OR_EMPTY_PARAMETER", "result.code is not as expected");
+
+					strictEqual(typeof result.message, "string", "result.message is not as expected");
+
+			});
+
+		});
+
+		it("should test with too long data", () => {
+
+			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
+				"name": "testtesttesttesttesttesttesttesttesttesttesttesttesttest"
 			}).then((result) => {
 
 				strictEqual(typeof result, "object", "result is not as expected");
@@ -114,7 +148,7 @@ describe("Terminals / open / Server", () => {
 
 	describe("shell", () => {
 
-		it("should test without shell", () => {
+		it("should test without data", () => {
 
 			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
 				"name": TEST_NAME
@@ -131,7 +165,7 @@ describe("Terminals / open / Server", () => {
 
 		});
 
-		it("should test with wrong shell", () => {
+		it("should test with wrong type data", () => {
 
 			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
 				"name": TEST_NAME,
@@ -149,11 +183,47 @@ describe("Terminals / open / Server", () => {
 
 		});
 
-		it("should test with empty shell", () => {
+		it("should test with empty data", () => {
 
 			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
 				"name": TEST_NAME,
 				"shell": ""
+			}).then((result) => {
+
+				strictEqual(typeof result, "object", "result is not as expected");
+
+					strictEqual(typeof result.code, "string", "result.code is not as expected");
+						strictEqual(result.code, "RANGE_OR_EMPTY_PARAMETER", "result.code is not as expected");
+
+					strictEqual(typeof result.message, "string", "result.message is not as expected");
+
+			});
+
+		});
+
+		it("should test with too short data", () => {
+
+			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
+				"name": TEST_NAME,
+				"shell": "te"
+			}).then((result) => {
+
+				strictEqual(typeof result, "object", "result is not as expected");
+
+					strictEqual(typeof result.code, "string", "result.code is not as expected");
+						strictEqual(result.code, "RANGE_OR_EMPTY_PARAMETER", "result.code is not as expected");
+
+					strictEqual(typeof result.message, "string", "result.message is not as expected");
+
+			});
+
+		});
+
+		it("should test with too long data", () => {
+
+			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
+				"name": TEST_NAME,
+				"shell": "testtesttesttesttesttesttest"
 			}).then((result) => {
 
 				strictEqual(typeof result, "object", "result is not as expected");
