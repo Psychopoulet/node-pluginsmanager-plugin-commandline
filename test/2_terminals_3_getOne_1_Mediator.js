@@ -52,55 +52,6 @@ describe("Terminals / getOne / Mediator", () => {
 
 	describe("terminalnumber", () => {
 
-		it("should test without terminalnumber", (done) => {
-
-			mediator.getOneTerminal({}).then(() => {
-				done(new Error("There is no generated Error"));
-			}).catch((err) => {
-
-				strictEqual(typeof err, "object", "Generated Error is not as expected");
-				strictEqual(err instanceof ReferenceError, true, "Generated Error is not as expected");
-
-				done();
-
-			});
-
-		});
-
-		it("should test with wrong terminalnumber", (done) => {
-
-			mediator.getOneTerminal({
-				"terminalnumber": false
-			}).then(() => {
-				done(new Error("There is no generated Error"));
-			}).catch((err) => {
-
-				strictEqual(typeof err, "object", "Generated Error is not as expected");
-				strictEqual(err instanceof TypeError, true, "Generated Error is not as expected");
-
-				done();
-
-			});
-
-		});
-
-		it("should test with empty terminalnumber", (done) => {
-
-			mediator.getOneTerminal({
-				"terminalnumber": 0
-			}).then(() => {
-				done(new Error("There is no generated Error"));
-			}).catch((err) => {
-
-				strictEqual(typeof err, "object", "Generated Error is not as expected");
-				strictEqual(err instanceof RangeError, true, "Generated Error is not as expected");
-
-				done();
-
-			});
-
-		});
-
 		it("should test with inexistant terminal", () => {
 
 			return mediator.getOneTerminal({

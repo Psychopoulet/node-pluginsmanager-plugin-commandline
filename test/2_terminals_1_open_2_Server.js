@@ -79,7 +79,8 @@ describe("Terminals / open / Server", () => {
 		it("should test with wrong type data", () => {
 
 			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
-				"name": false
+				"name": false,
+				"shell": TEST_SHELL
 			}).then((result) => {
 
 				strictEqual(typeof result, "object", "result is not as expected");
@@ -96,7 +97,8 @@ describe("Terminals / open / Server", () => {
 		it("should test with empty data", () => {
 
 			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
-				"name": ""
+				"name": "",
+				"shell": TEST_SHELL
 			}).then((result) => {
 
 				strictEqual(typeof result, "object", "result is not as expected");
@@ -113,7 +115,8 @@ describe("Terminals / open / Server", () => {
 		it("should test with too short data", () => {
 
 			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
-				"name": "te"
+				"name": "te",
+				"shell": TEST_SHELL
 			}).then((result) => {
 
 				strictEqual(typeof result, "object", "result is not as expected");
@@ -130,7 +133,8 @@ describe("Terminals / open / Server", () => {
 		it("should test with too long data", () => {
 
 			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
-				"name": "testtesttesttesttesttesttesttesttesttesttesttesttesttest"
+				"name": "testtesttesttesttesttesttesttesttesttesttesttesttesttest",
+				"shell": TEST_SHELL
 			}).then((result) => {
 
 				strictEqual(typeof result, "object", "result is not as expected");
@@ -224,6 +228,24 @@ describe("Terminals / open / Server", () => {
 			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
 				"name": TEST_NAME,
 				"shell": "testtesttesttesttesttesttest"
+			}).then((result) => {
+
+				strictEqual(typeof result, "object", "result is not as expected");
+
+					strictEqual(typeof result.code, "string", "result.code is not as expected");
+						strictEqual(result.code, "RANGE_OR_EMPTY_PARAMETER", "result.code is not as expected");
+
+					strictEqual(typeof result.message, "string", "result.message is not as expected");
+
+			});
+
+		});
+
+		it("should test with wrong data", () => {
+
+			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
+				"name": TEST_NAME,
+				"shell": "thisisatest"
 			}).then((result) => {
 
 				strictEqual(typeof result, "object", "result is not as expected");

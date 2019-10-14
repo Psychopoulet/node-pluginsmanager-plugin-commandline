@@ -50,156 +50,69 @@ describe("Terminals / close / Mediator", () => {
 
 	});
 
-	it("should test without data", (done) => {
+	it("should test with inexistant terminal", () => {
 
-		mediator.closeTerminal().then(() => {
-			done(new Error("There is no generated Error"));
-		}).catch((err) => {
+		return mediator.closeTerminal({
+			"terminalnumber": 1
+		}).then((data) => {
 
-			strictEqual(typeof err, "object", "Generated Error is not as expected");
-			strictEqual(err instanceof ReferenceError, true, "Generated Error is not as expected");
-
-			done();
+			strictEqual(typeof data, "undefined", "returned data is not as expected");
 
 		});
 
 	});
 
-	it("should test wrong data", (done) => {
+	it("should close a terminal", (done) => {
 
-		mediator.closeTerminal(false).then(() => {
-			done(new Error("There is no generated Error"));
-		}).catch((err) => {
+		let success = 0;
 
-			strictEqual(typeof err, "object", "Generated Error is not as expected");
-			strictEqual(err instanceof TypeError, true, "Generated Error is not as expected");
+		/**
+		* Fire end of test
+		* @returns {Promise} : operation result
+		*/
+		function _end () {
 
-			done();
-
-		});
-
-	});
-
-	describe("terminalnumber", () => {
-
-		it("should test without terminalnumber", (done) => {
-
-			mediator.closeTerminal({}).then(() => {
-				done(new Error("There is no generated Error"));
-			}).catch((err) => {
-
-				strictEqual(typeof err, "object", "Generated Error is not as expected");
-				strictEqual(err instanceof ReferenceError, true, "Generated Error is not as expected");
-
+			++success;
+			if (2 === success) {
 				done();
-
-			});
-
-		});
-
-		it("should test with wrong terminalnumber", (done) => {
-
-			mediator.closeTerminal({
-				"terminalnumber": false
-			}).then(() => {
-				done(new Error("There is no generated Error"));
-			}).catch((err) => {
-
-				strictEqual(typeof err, "object", "Generated Error is not as expected");
-				strictEqual(err instanceof TypeError, true, "Generated Error is not as expected");
-
-				done();
-
-			});
-
-		});
-
-		it("should test with empty terminalnumber", (done) => {
-
-			mediator.closeTerminal({
-				"terminalnumber": 0
-			}).then(() => {
-				done(new Error("There is no generated Error"));
-			}).catch((err) => {
-
-				strictEqual(typeof err, "object", "Generated Error is not as expected");
-				strictEqual(err instanceof RangeError, true, "Generated Error is not as expected");
-
-				done();
-
-			});
-
-		});
-
-		it("should test with inexistant terminal", () => {
-
-			return mediator.closeTerminal({
-				"terminalnumber": 1
-			}).then((data) => {
-
-				strictEqual(typeof data, "undefined", "returned data is not as expected");
-
-			});
-
-		});
-
-	});
-
-	describe("execute", () => {
-
-		it("should open a terminal", (done) => {
-
-			let success = 0;
-
-			/**
-			* Fire end of test
-			* @returns {Promise} : operation result
-			*/
-			function _end () {
-
-				++success;
-				if (2 === success) {
-					done();
-				}
-
 			}
 
-			mediator.once("terminal.closed", (data) => {
+		}
 
-				testTerminal(data.terminal);
+		mediator.once("terminal.closed", (data) => {
 
-				_end();
+			testTerminal(data.terminal);
 
-			});
-
-			mediator.openTerminal(null, {
-				"name": TEST_NAME,
-				"shell": TEST_SHELL
-			}).then((terminal) => {
-
-				testTerminal(terminal);
-
-				return mediator.closeTerminal({
-					"terminalnumber": terminal.number
-				});
-
-			}).then((data) => {
-
-				strictEqual(typeof data, "undefined", "returned data is not as expected");
-
-				return mediator.getAllTerminals();
-
-			}).then((terminals) => {
-
-				strictEqual(typeof terminals, "object", "terminals is not as expected");
-				strictEqual(terminals instanceof Array, true, "terminals is not as expected");
-					strictEqual(terminals.length, 0, "terminals is not as expected");
-
-				_end();
-
-			}).catch(done);
+			_end();
 
 		});
+
+		mediator.openTerminal(null, {
+			"name": TEST_NAME,
+			"shell": TEST_SHELL
+		}).then((terminal) => {
+
+			testTerminal(terminal);
+
+			return mediator.closeTerminal({
+				"terminalnumber": terminal.number
+			});
+
+		}).then((data) => {
+
+			strictEqual(typeof data, "undefined", "returned data is not as expected");
+
+			return mediator.getAllTerminals();
+
+		}).then((terminals) => {
+
+			strictEqual(typeof terminals, "object", "terminals is not as expected");
+			strictEqual(terminals instanceof Array, true, "terminals is not as expected");
+				strictEqual(terminals.length, 0, "terminals is not as expected");
+
+			_end();
+
+		}).catch(done);
 
 	});
 
