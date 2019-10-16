@@ -200,6 +200,8 @@ describe("Terminals / commandLine / Server", () => {
 
 					strictEqual(typeof message.command, "string", "message.command is not as expected");
 
+				(0, console).log("message", message.command);
+
 				testTerminal(message.data.terminal);
 
 				strictEqual(message.data.terminal.number, _number, "message.terminal is not as expected");

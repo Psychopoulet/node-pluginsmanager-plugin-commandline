@@ -97,6 +97,8 @@ describe("Terminals / commandLine / exit", () => {
 
 			testTerminal(message.data.terminal, _number);
 
+			(0, console).log("message", message.command);
+
 			if (STEPS[step] === message.command) {
 
 				if (0 === step) {
