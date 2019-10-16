@@ -38,7 +38,7 @@
     "node-pluginsmanager-plugin": "~3.1.0"
   },
   "devDependencies": {
-    "@types/node": "12.11.0",
+    "@types/node": "12.11.1",
     "@types/ws": "6.0.3",
     "check-version-modules": "1.3.0",
     "coveralls": "3.0.7",

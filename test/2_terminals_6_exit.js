@@ -80,6 +80,7 @@ describe("Terminals / commandLine / exit", () => {
 
 			++success;
 			if (2 === success) {
+				testServer.removeMessageListeners();
 				done();
 			}
 
@@ -94,9 +95,7 @@ describe("Terminals / commandLine / exit", () => {
 
 				strictEqual(typeof message.command, "string", "message.command is not as expected");
 
-			testTerminal(message.data.terminal);
-
-			strictEqual(message.data.terminal.number, _number, "message.terminal is not as expected");
+			testTerminal(message.data.terminal, _number);
 
 			if (STEPS[step] === message.command) {
 

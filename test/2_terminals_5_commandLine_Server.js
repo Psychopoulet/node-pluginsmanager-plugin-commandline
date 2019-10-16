@@ -185,6 +185,7 @@ describe("Terminals / commandLine / Server", () => {
 
 				++success;
 				if (2 === success) {
+					testServer.removeMessageListeners();
 					done();
 				}
 
