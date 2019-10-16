@@ -19,12 +19,12 @@
 
 // module
 
-module.exports = function testTerminal (terminal) {
+module.exports = function testTerminal (terminal, number = 1) {
 
 	strictEqual(typeof terminal, "object", "terminal is not as expected");
 
 		strictEqual(typeof terminal.number, "number", "terminal.number is not as expected");
-			strictEqual(terminal.number, 1, "terminal.number is not as expected");
+			strictEqual(terminal.number, number, "terminal.number is not as expected");
 
 		strictEqual(typeof terminal.name, "string", "terminal.name is not as expected");
 			strictEqual(terminal.name, TEST_NAME, "terminal.name is not as expected");

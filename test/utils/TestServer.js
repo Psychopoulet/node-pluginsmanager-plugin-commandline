@@ -177,4 +177,10 @@ module.exports = class TestServer {
 
 	}
 
+	removeMessageListeners () {
+
+		this._websocketClient.removeAllListeners("message");
+
+	}
+
 };

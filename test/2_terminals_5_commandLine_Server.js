@@ -55,10 +55,7 @@ describe("Terminals / commandLine / Server", () => {
 
 	after(() => {
 
-		return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals/" + _number, "delete", {
-			"name": TEST_NAME,
-			"shell": TEST_SHELL
-		}).then(() => {
+		return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals/" + _number, "delete").then(() => {
 			return testServer.release();
 		}).then(() => {
 			return orchestrator.release();
@@ -178,6 +175,21 @@ describe("Terminals / commandLine / Server", () => {
 
 		it("should execute command line", (done) => {
 
+			let success = 0;
+
+			/**
+			* Fire end of test
+			* @returns {Promise} : operation result
+			*/
+			function _end () {
+
+				++success;
+				if (2 === success) {
+					done();
+				}
+
+			}
+
 			testServer.onMessage((message) => {
 
 				strictEqual(typeof message, "object", "message is not as expected");
@@ -191,8 +203,8 @@ describe("Terminals / commandLine / Server", () => {
 
 				strictEqual(message.data.terminal.number, _number, "message.terminal is not as expected");
 
-				if (message.data.content.includes("npm -v")) {
-					done();
+				if ("terminal.stdout" === message.command && message.data.content.includes("npm -v")) {
+					_end();
 				}
 
 			});
@@ -200,6 +212,18 @@ describe("Terminals / commandLine / Server", () => {
 			testServer.request(_url, "put", {
 				"command": "npm",
 				"arguments": [ "-v" ]
+			}).then(() => {
+
+				return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "get");
+
+			}).then((terminals) => {
+
+				strictEqual(terminals.length, 1, "terminals length is not as expected");
+
+				testTerminal(terminals[0]);
+
+				_end();
+
 			}).catch(done);
 
 		});

@@ -4,6 +4,7 @@
 
 	// natives
 	const { join } = require("path");
+	const { platform } = require("os");
 	const { strictEqual } = require("assert");
 
 	// locals
@@ -16,6 +17,7 @@
 
 	const TEST_NAME = "Test 1";
 	const TEST_SHELL = getShell(); // dev or CI
+	const IS_WINDOWS = "win32" === platform();
 
 // tests
 
@@ -275,6 +277,7 @@ describe("Terminals / open / Server", () => {
 
 				++success;
 				if (2 === success) {
+					testServer.removeMessageListeners();
 					done();
 				}
 
@@ -319,6 +322,58 @@ describe("Terminals / open / Server", () => {
 			}).catch(done);
 
 		});
+
+		it("should open a terminal with detached option", () => {
+
+			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
+				"name": TEST_NAME,
+				"shell": TEST_SHELL,
+				"options": {
+					"detached": true
+				}
+			}).then((terminal) => {
+
+				testTerminal(terminal, 2);
+
+			});
+
+		});
+
+		if (!IS_WINDOWS) {
+
+			it("should open a terminal with uid option", () => {
+
+				return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
+					"name": TEST_NAME,
+					"shell": TEST_SHELL,
+					"options": {
+						"uid": (0, process).getuid()
+					}
+				}).then((terminal) => {
+
+					testTerminal(terminal, 3);
+
+				});
+
+			});
+
+			it("should open a terminal with gid option", () => {
+
+				return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "put", {
+					"name": TEST_NAME,
+					"shell": TEST_SHELL,
+					"options": {
+						"gid": (0, process).getgid()
+					}
+				}).then((terminal) => {
+
+					testTerminal(terminal, 4);
+
+				});
+
+			});
+
+		}
 
 	});
 
