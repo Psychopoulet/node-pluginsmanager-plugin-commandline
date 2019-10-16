@@ -200,7 +200,15 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/CommandLine"
+								"type": "object",
+								"properties": {
+									"commandline": {
+										"$ref": "#/components/schemas/CommandLine"
+									}
+								},
+								"required": [
+									"commandline"
+								]
 							}
 						}
 					}
@@ -233,7 +241,7 @@
 	},
 	"components": {
 		"schemas": {
-			"TerminalNumber": {
+			"TerminalNumber": {	
 				"description": "The number of the Terminal",
 				"type": "integer",
 				"minimum": 1
@@ -319,23 +327,8 @@
 			},
 			"CommandLine": {
 				"description": "Command line currently executed by the opened Terminal",
-				"type": "object",
-				"properties": {
-					"command": {
-						"type": "string",
-						"minLength": 2,
-						"maxLength": 15
-					},
-					"arguments": {
-						"type": "array",
-						"items": {
-							"type": "string"
-						}
-					}
-				},
-				"required": [
-					"command"
-				]
+				"type": "string",
+				"minLength": 1
 			},
 			"Error": {
 				"type": "object",
