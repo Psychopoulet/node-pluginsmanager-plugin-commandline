@@ -156,7 +156,7 @@ describe("Terminals / commandLine / Server", () => {
 		it("should test with spaces", () => {
 
 			return testServer.request(_url, "put", {
-				"command": "npm -v"
+				"command": "node -v"
 			}).then((result) => {
 
 				strictEqual(typeof result, "object", "result is not as expected");
@@ -212,14 +212,16 @@ describe("Terminals / commandLine / Server", () => {
 
 				strictEqual(message.data.terminal.number, _number, "message.terminal is not as expected");
 
-				if ("terminal.stdout" === message.command && message.data.content.includes("npm -v")) {
+				if ("terminal.stdout" === message.command &&
+					(0, process).versions.node === message.data.content.replace(EOL, "").replace("v", "")
+				) {
 					_end();
 				}
 
 			});
 
 			testServer.request(_url, "put", {
-				"command": "npm",
+				"command": "node",
 				"arguments": [ "-v" ]
 			}).then(() => {
 
