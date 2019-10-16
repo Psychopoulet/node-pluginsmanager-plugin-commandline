@@ -1,0 +1,364 @@
+{
+	"openapi": "3.0.2",
+	"info": {
+		"title": "node-pluginsmanager-plugin-terminals",
+		"version": "1.0.0",
+		"description": "A plugin to manage terminals and execute command lines for node-pluginsmanager",
+		"contact": {
+			"name": "Sébastien VIDAL",
+			"url": "https://github.com/Psychopoulet/node-pluginsmanager-plugin-terminals/issues"
+		},
+		"license": {
+			"name": "ISC",
+			"url": "https://en.wikipedia.org/wiki/ISC_license"
+		}
+	},
+	"paths": {
+		"/node-pluginsmanager-plugin-terminals/descriptor": {
+			"get": {
+				"description": "",
+				"summary": "Return parsed descriptor",
+				"responses": {
+					"200": {
+						"description": "Returned descriptor",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occured",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin-terminals/api/terminals": {
+			"get": {
+				"description": "",
+				"summary": "Return all running terminals",
+				"operationId": "getAllTerminals",
+				"responses": {
+					"200": {
+						"description": "Opened terminals",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Terminal"
+									}
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occured",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"description": "",
+				"summary": "Open a terminal",
+				"operationId": "openTerminal",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/TerminalCreation"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Created terminal",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Terminal"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occured",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin-terminals/api/terminals/{terminalnumber}": {
+			"get": {
+				"description": "",
+				"summary": "Return a specific terminal",
+				"operationId": "getOneTerminal",
+				"parameters": [
+					{
+						"name": "terminalnumber",
+						"in": "path",
+						"description": "Terminal number",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/TerminalNumber"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Searched terminal",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Terminal"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occured",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"description": "",
+				"summary": "Close a specific terminal",
+				"operationId": "closeTerminal",
+				"parameters": [
+					{
+						"name": "terminalnumber",
+						"in": "path",
+						"description": "Terminal number",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/TerminalNumber"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Terminal closed"
+					},
+					"default": {
+						"description": "An error occured",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/node-pluginsmanager-plugin-terminals/api/terminals/{terminalnumber}/commandline": {
+			"put": {
+				"description": "",
+				"summary": "Execute a new command line",
+				"parameters": [
+					{
+						"name": "terminalnumber",
+						"in": "path",
+						"description": "Terminal number",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/TerminalNumber"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"commandline": {
+										"$ref": "#/components/schemas/CommandLine"
+									}
+								},
+								"required": [
+									"commandline"
+								]
+							}
+						}
+					}
+				},
+				"operationId": "commandLine",
+				"responses": {
+					"201": {
+						"description": "Returned data",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CommandLine"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occured",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"TerminalNumber": {	
+				"description": "The number of the Terminal",
+				"type": "integer",
+				"minimum": 1
+			},
+			"TerminalName": {
+				"description": "The name of the Terminal",
+				"type": "string",
+				"minLength": 3,
+				"maxLength": 15
+			},
+			"TerminalShell": {
+				"description": "The shell used by the new Terminal (\"cmd\" on Windows, \"bash\" on Linux, etc...)",
+				"type": "string",
+				"minLength": 3,
+				"maxLength": 10
+			},
+			"TerminalCreation": {
+				"description": "Data for Terminal creation",
+				"type": "object",
+				"properties": {
+					"name": {
+						"$ref": "#/components/schemas/TerminalName"
+					},
+					"shell": {
+						"$ref": "#/components/schemas/TerminalShell"
+					},
+					"options": {
+						"$ref": "#/components/schemas/Options"
+					}
+				},
+				"required": [
+					"name", "shell"
+				]
+			},
+			"Terminal": {
+				"description": "Created Terminal",
+				"type": "object",
+				"properties": {
+					"number": {
+						"$ref": "#/components/schemas/TerminalNumber"
+					},
+					"name": {
+						"$ref": "#/components/schemas/TerminalName"
+					},
+					"shell": {
+						"$ref": "#/components/schemas/TerminalShell"
+					},
+					"options": {
+						"$ref": "#/components/schemas/Options"
+					},
+					"currentcommandline": {
+						"$ref": "#/components/schemas/CommandLine"
+					}
+				},
+				"required": [
+					"number",
+					"name",
+					"shell",
+					"options"
+				]
+			},
+			"Options": {
+				"description": "https://nodejs.org/api/child_process.html#child_process_child_process_spawn_command_args_options",
+				"type": "object",
+				"properties": {
+					"cwd": {
+						"description": "default : os.homedir()",
+						"type": "string"
+					},
+					"detached": {
+						"type": "boolean"
+					},
+					"uid": {
+						"type": "integer"
+					},
+					"gid": {
+						"type": "integer"
+					},
+					"windowsHide": {
+						"type": "boolean"
+					}
+				}
+			},
+			"CommandLine": {
+				"description": "Command line currently executed by the opened Terminal",
+				"type": "string",
+				"minLength": 1
+			},
+			"Error": {
+				"type": "object",
+				"required": [
+					"code",
+					"message"
+				],
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					}
+				}
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "http://127.0.0.1:3000",
+			"description": "Test server for HTTP requests"
+		},
+		{
+			"url": "ws://127.0.0.1:3001",
+			"description": "Test server for socket requests"
+		}
+	],
+	"externalDocs": {
+		"description": "Find out more about this API",
+		"url": "https://github.com/Psychopoulet/node-pluginsmanager-plugin-terminals#readme"
+	}
+}

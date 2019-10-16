@@ -1,7 +1,7 @@
 {
-  "name": "node-pluginsmanager-plugin-commandline",
+  "name": "node-pluginsmanager-plugin-terminals",
   "version": "1.0.0",
-  "description": "A plugin package to inherit for node-pluginsmanager",
+  "description": "A plugin to manage terminals and execute command lines for node-pluginsmanager",
   "main": "lib/main.js",
   "typings": "lib/index.d.ts",
   "scripts": {
@@ -22,7 +22,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/Psychopoulet/node-pluginsmanager-plugin-commandline"
+    "url": "git://github.com/Psychopoulet/node-pluginsmanager-plugin-terminals"
   },
   "keywords": [
     "plugin",
@@ -32,24 +32,26 @@
   "author": "Sébastien VIDAL",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Psychopoulet/node-pluginsmanager-plugin-commandline/issues"
+    "url": "https://github.com/Psychopoulet/node-pluginsmanager-plugin-terminals/issues"
   },
   "dependencies": {
-    "node-pluginsmanager-plugin": "2.1.0"
+    "node-pluginsmanager-plugin": "~3.1.0"
   },
   "devDependencies": {
-    "@types/node": "12.7.2",
-    "@types/ws": "6.0.2",
+    "@types/node": "12.11.1",
+    "@types/socket.io": "2.1.4",
+    "@types/ws": "6.0.3",
     "check-version-modules": "1.3.0",
-    "coveralls": "3.0.6",
-    "eslint": "6.2.0",
+    "coveralls": "3.0.7",
+    "eslint": "6.5.1",
     "express": "4.17.1",
-    "husky": "3.0.4",
-    "mocha": "6.2.0",
+    "husky": "3.0.9",
+    "mocha": "6.2.1",
+    "node-pluginsmanager": "2.1.1",
     "nyc": "14.1.1",
     "ws": "7.1.2"
   },
-  "homepage": "https://github.com/Psychopoulet/node-pluginsmanager-plugin-commandline#readme",
+  "homepage": "https://github.com/Psychopoulet/node-pluginsmanager-plugin-terminals#readme",
   "engines": {
     "node": ">=6.0.0"
   }
