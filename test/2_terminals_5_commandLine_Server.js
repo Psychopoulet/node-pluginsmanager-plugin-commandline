@@ -88,7 +88,7 @@ describe("Terminals / commandLine / Server", () => {
 		it("should test with wrong data", () => {
 
 			return testServer.request(_url, "put", {
-				"command": 1
+				"commandline": 1
 			}).then((result) => {
 
 				strictEqual(typeof result, "object", "result is not as expected");
@@ -105,64 +105,13 @@ describe("Terminals / commandLine / Server", () => {
 		it("should test with empty data", () => {
 
 			return testServer.request(_url, "put", {
-				"command": ""
+				"commandline": ""
 			}).then((result) => {
 
 				strictEqual(typeof result, "object", "result is not as expected");
 
 					strictEqual(typeof result.code, "string", "result.code is not as expected");
 						strictEqual(result.code, "RANGE_OR_EMPTY_PARAMETER", "result.code is not as expected");
-
-					strictEqual(typeof result.message, "string", "result.message is not as expected");
-
-			});
-
-		});
-
-		it("should test with too short data", () => {
-
-			return testServer.request(_url, "put", {
-				"command": "t"
-			}).then((result) => {
-
-				strictEqual(typeof result, "object", "result is not as expected");
-
-					strictEqual(typeof result.code, "string", "result.code is not as expected");
-						strictEqual(result.code, "RANGE_OR_EMPTY_PARAMETER", "result.code is not as expected");
-
-					strictEqual(typeof result.message, "string", "result.message is not as expected");
-
-			});
-
-		});
-
-		it("should test with too long data", () => {
-
-			return testServer.request(_url, "put", {
-				"command": "testtesttesttesttesttesttesttesttesttesttesttesttesttest"
-			}).then((result) => {
-
-				strictEqual(typeof result, "object", "result is not as expected");
-
-					strictEqual(typeof result.code, "string", "result.code is not as expected");
-						strictEqual(result.code, "RANGE_OR_EMPTY_PARAMETER", "result.code is not as expected");
-
-					strictEqual(typeof result.message, "string", "result.message is not as expected");
-
-			});
-
-		});
-
-		it("should test with spaces", () => {
-
-			return testServer.request(_url, "put", {
-				"command": "node -v"
-			}).then((result) => {
-
-				strictEqual(typeof result, "object", "result is not as expected");
-
-					strictEqual(typeof result.code, "string", "result.code is not as expected");
-						strictEqual(result.code, "INTERNAL_SERVER_ERROR", "result.code is not as expected");
 
 					strictEqual(typeof result.message, "string", "result.message is not as expected");
 
@@ -186,7 +135,7 @@ describe("Terminals / commandLine / Server", () => {
 
 				++success;
 				if (2 === success) {
-					testServer.removeMessageListeners();
+					// testServer.removeMessageListeners();
 					done();
 				}
 
@@ -201,28 +150,26 @@ describe("Terminals / commandLine / Server", () => {
 
 					strictEqual(typeof message.command, "string", "message.command is not as expected");
 
+				testTerminal(message.data.terminal);
+
+				strictEqual(message.data.terminal.number, _number, "message.terminal is not as expected");
+
 				if ("terminal.stdout" === message.command) {
 					(0, console).log("message", message.command, message.data.content.replace(EOL, ""));
+				}
+				else if ("terminal.error" === message.command) {
+					(0, console).log("message", message.command, message.data.error.replace(EOL, ""));
 				}
 				else {
 					(0, console).log("message", message.command);
 				}
 
-				testTerminal(message.data.terminal);
-
-				strictEqual(message.data.terminal.number, _number, "message.terminal is not as expected");
-
-				if ("terminal.stdout" === message.command &&
-					(0, process).versions.node === message.data.content.replace(EOL, "").replace("v", "")
-				) {
-					_end();
-				}
+				_end();
 
 			});
 
 			testServer.request(_url, "put", {
-				"command": "node",
-				"arguments": [ "-v" ]
+				"commandline": "node -v"
 			}).then(() => {
 
 				return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "get");

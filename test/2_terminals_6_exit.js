@@ -68,9 +68,6 @@ describe("Terminals / commandLine / exit", () => {
 
 	it("should execute command line", (done) => {
 
-		const STEPS = [ "terminal.stdout", "terminal.error", "terminal.closed" ];
-		let step = 0;
-
 		let success = 0;
 
 		/**
@@ -81,7 +78,7 @@ describe("Terminals / commandLine / exit", () => {
 
 			++success;
 			if (2 === success) {
-				testServer.removeMessageListeners();
+				// testServer.removeMessageListeners();
 				done();
 			}
 
@@ -108,33 +105,14 @@ describe("Terminals / commandLine / exit", () => {
 				(0, console).log("message", message.command);
 			}
 
-			if (STEPS[step] === message.command) {
-
-				if (0 === step) {
-
-					if (message.data.content.includes("exit")) {
-						++step;
-					}
-					else {
-						done(new Error("Unexpected message \"" + message.data.content + "\""));
-					}
-
-				}
-				else {
-					++step;
-				}
-
-				if (3 === step) {
-					_end();
-				}
-
+			if ("terminal.closed" === message.command) {
+				_end();
 			}
 
 		});
 
 		testServer.request(_url, "put", {
-			"command": "exit",
-			"arguments": [ "1" ]
+			"commandline": "exit 1"
 		}).then(() => {
 
 			return testServer.request("/node-pluginsmanager-plugin-terminals/api/terminals", "get");
