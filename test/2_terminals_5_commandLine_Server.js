@@ -4,6 +4,7 @@
 
 	// natives
 	const { join } = require("path");
+	const { EOL } = require("os");
 	const { strictEqual } = require("assert");
 
 	// locals
@@ -200,7 +201,12 @@ describe("Terminals / commandLine / Server", () => {
 
 					strictEqual(typeof message.command, "string", "message.command is not as expected");
 
-				(0, console).log("message", message.command);
+				if ("terminal.stdout" === message.command) {
+					(0, console).log("message", message.command, message.data.content.replace(EOL, ""));
+				}
+				else {
+					(0, console).log("message", message.command);
+				}
 
 				testTerminal(message.data.terminal);
 
