@@ -239,6 +239,23 @@
 			}
 		}
 	},
+	"events": {
+		"terminal.opened": {
+			"$ref": "#/components/schemas/TerminalEvent"
+		},
+		"terminal.closed": {
+			"$ref": "#/components/schemas/TerminalEvent"
+		},
+		"terminal.stdout": {
+			"$ref": "#/components/schemas/TerminalContentEvent"
+		},
+		"terminal.stderr": {
+			"$ref": "#/components/schemas/TerminalContentEvent"
+		},
+		"terminal.error": {
+			"$ref": "#/components/schemas/TerminalErrorEvent"
+		}
+	},
 	"components": {
 		"schemas": {
 			"TerminalNumber": {	
@@ -257,6 +274,11 @@
 				"type": "string",
 				"minLength": 3,
 				"maxLength": 10
+			},
+			"CommandLine": {
+				"description": "Command line currently executed by the opened Terminal",
+				"type": "string",
+				"minLength": 1
 			},
 			"TerminalCreation": {
 				"description": "Data for Terminal creation",
@@ -325,17 +347,49 @@
 					}
 				}
 			},
-			"CommandLine": {
-				"description": "Command line currently executed by the opened Terminal",
-				"type": "string",
-				"minLength": 1
+			"TerminalEvent": {
+				"type": "object",
+				"properties": {
+					"terminal": {
+						"$ref": "#/components/schemas/Terminal"
+					}
+				},
+				"required": [
+					"terminal"
+				]
+			},
+			"TerminalContentEvent": {
+				"type": "object",
+				"properties": {
+					"terminal": {
+						"$ref": "#/components/schemas/Terminal"
+					},
+					"content": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"terminal",
+					"content"
+				]
+			},
+			"TerminalErrorEvent": {
+				"type": "object",
+				"properties": {
+					"terminal": {
+						"$ref": "#/components/schemas/Terminal"
+					},
+					"error": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"terminal",
+					"error"
+				]
 			},
 			"Error": {
 				"type": "object",
-				"required": [
-					"code",
-					"message"
-				],
 				"properties": {
 					"code": {
 						"type": "string"
@@ -343,7 +397,11 @@
 					"message": {
 						"type": "string"
 					}
-				}
+				},
+				"required": [
+					"code",
+					"message"
+				]
 			}
 		}
 	},
