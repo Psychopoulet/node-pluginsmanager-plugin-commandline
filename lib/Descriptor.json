@@ -2,7 +2,7 @@
 	"openapi": "3.0.2",
 	"info": {
 		"title": "node-pluginsmanager-plugin-terminals",
-		"version": "1.0.0",
+		"version": "1.0.1",
 		"description": "A plugin to manage terminals and execute command lines for node-pluginsmanager",
 		"contact": {
 			"name": "Sébastien VIDAL",
