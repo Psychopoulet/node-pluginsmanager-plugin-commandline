@@ -11,58 +11,28 @@ A plugin to manage terminals and execute command lines for node-pluginsmanager
 ## Installation
 
 ```bash
-$ npm install node-pluginsmanager-plugin-terminals
+$ git clone git://github.com/Psychopoulet/node-pluginsmanager-plugin-terminals.git
 ```
 
 ## Features
 
   * inheritable parent for node-pluginsmanager's plugin to use distant command line
-  * create & destroy terminals
-  * use command line
-  * get instant returns
+  * open & close terminals
+  * use command line in the terminals
+  * get instant push returns
 
 ## [OpenAPI documentation](./lib/Descriptor.json)
 
-## Interfaces
-
-### ??
+> See "events" to know the push events
+> The events respect the [WebSockets node-pluginsmanager-plugin](https://github.com/Psychopoulet/node-pluginsmanager-plugin/blob/master/documentation/Server.md#websockets) conventions
 
 ```typescript
-interface i?? {
+{
+  "plugin": "node-pluginsmanager-plugin-terminals";
+  "command": "terminal.opened" | "terminal.closed" | "terminal.stdout" | "terminal.stderr" | "terminal.error";
+  "data": "#/components/schemas/TerminalEvent" | "#/components/schemas/TerminalContentEvent" | "#/components/schemas/TerminalErrorEvent";
 }
 ```
-
-## Classes
-
-### Resume
-
-* Mediator : manage terminals
-* Server : expose plugin's endpoints to external use (API)
-* Descriptor : OpenAPI (v3) description for Server endpoints (this is NOT a js file, but a json OpenAPI file)
-* Orchestrator : plugin's data (extracted from plugin's package.json) and Descriptor, Mediator & Server initializer
-
-### Mediator (extends [Mediator](https://github.com/Psychopoulet/node-pluginsmanager-plugin#mediator-extends-bootable))
-
-  -- Constructor --
-
-  * ``` constructor(options: iMediatorOptions) ```
-
-  -- Events --
-
-  * ``` initialized ``` fired when mediator is initialized
-  * ``` released ``` fired when mediator is released
-
-  -- Attributes --
-
-  * ``` initialized: boolean ``` mediator status
-
-  * ``` externalRessourcesDirectory: string ``` used to write local data like sqlite database, json files, pictures, etc... (see iMediatorOptions)
-
-### Server (extends [Server](https://github.com/Psychopoulet/node-pluginsmanager-plugin#mediator-extends-bootable))
-
-### [Descriptor](./lib/Descriptor.json)
-
-### Orchestrator (extends [Orchestrator](https://github.com/Psychopoulet/node-pluginsmanager-plugin#orchestrator-extends-mediatoruser))
 
 ## Tests
 
