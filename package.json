@@ -35,19 +35,19 @@
     "url": "https://github.com/Psychopoulet/node-pluginsmanager-plugin-terminals/issues"
   },
   "dependencies": {
-    "node-pluginsmanager-plugin": "~3.1.1"
+    "node-pluginsmanager-plugin": "~3.1.2"
   },
   "devDependencies": {
-    "@types/node": "12.11.1",
+    "@types/node": "12.11.7",
     "@types/socket.io": "2.1.4",
     "@types/ws": "6.0.3",
     "check-version-modules": "1.3.0",
     "coveralls": "3.0.7",
-    "eslint": "6.5.1",
+    "eslint": "6.6.0",
     "express": "4.17.1",
     "husky": "3.0.9",
     "mocha": "6.2.2",
-    "node-pluginsmanager": "2.1.2",
+    "node-pluginsmanager": "2.1.7",
     "nyc": "14.1.1",
     "ws": "7.2.0"
   },
