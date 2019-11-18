@@ -290,7 +290,7 @@
 				"minLength": 1
 			},
 			"TerminalCreation": {
-				"description": "Data for Terminal creation",
+				"description": "Structure for Terminal creation",
 				"type": "object",
 				"properties": {
 					"name": {
@@ -308,7 +308,7 @@
 				]
 			},
 			"Terminal": {
-				"description": "Created Terminal",
+				"description": "Structure for created Terminal",
 				"type": "object",
 				"properties": {
 					"number": {
@@ -398,6 +398,7 @@
 				]
 			},
 			"Error": {
+				"description": "Structure for Error",
 				"type": "object",
 				"properties": {
 					"code": {
