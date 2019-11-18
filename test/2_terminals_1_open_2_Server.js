@@ -7,6 +7,9 @@
 	const { platform } = require("os");
 	const { strictEqual } = require("assert");
 
+	// externals
+	const colors = require("colors");
+
 	// locals
 	const getShell = require(join(__dirname, "utils", "getShell.js"));
 	const testTerminal = require(join(__dirname, "utils", "testTerminal.js"));
@@ -14,6 +17,8 @@
 	const Orchestrator = require(join(__dirname, "..", "lib", "Orchestrator.js"));
 
 // consts
+
+	const MAX_LENGTH_LOGS = 250;
 
 	const TEST_NAME = "Test 1";
 	const TEST_SHELL = getShell(); // dev or CI
@@ -23,7 +28,40 @@
 
 describe("Terminals / open / Server", () => {
 
-	const orchestrator = new Orchestrator();
+	const orchestrator = new Orchestrator({
+		"logger": (type, log) => {
+
+			let message = MAX_LENGTH_LOGS < log.length ? log.substr(0, MAX_LENGTH_LOGS) + "..." : log;
+
+			switch (type) {
+
+				case "info":
+					message = colors.cyan(message);
+				break;
+
+				case "success":
+					message = colors.green(message);
+				break;
+
+				case "warning":
+					message = colors.yellow(message);
+				break;
+
+				case "error":
+					message = colors.red(message);
+				break;
+
+				default:
+					// nothing to do here
+				break;
+
+			}
+
+			(0, console).log(message);
+
+		}
+	});
+
 	const testServer = new TestServer();
 
 	before(() => {

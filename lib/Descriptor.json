@@ -2,7 +2,7 @@
 	"openapi": "3.0.2",
 	"info": {
 		"title": "node-pluginsmanager-plugin-terminals",
-		"version": "1.0.5",
+		"version": "1.1.0",
 		"description": "A plugin to manage terminals and execute command lines for node-pluginsmanager",
 		"contact": {
 			"name": "Sébastien VIDAL",
@@ -290,7 +290,7 @@
 				"minLength": 1
 			},
 			"TerminalCreation": {
-				"description": "Data for Terminal creation",
+				"description": "Structure for Terminal creation",
 				"type": "object",
 				"properties": {
 					"name": {
@@ -308,7 +308,7 @@
 				]
 			},
 			"Terminal": {
-				"description": "Created Terminal",
+				"description": "Structure for created Terminal",
 				"type": "object",
 				"properties": {
 					"number": {
@@ -398,6 +398,7 @@
 				]
 			},
 			"Error": {
+				"description": "Structure for Error",
 				"type": "object",
 				"properties": {
 					"code": {

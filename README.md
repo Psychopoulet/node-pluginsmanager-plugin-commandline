@@ -29,8 +29,8 @@ $ git clone git://github.com/Psychopoulet/node-pluginsmanager-plugin-terminals.g
 ```typescript
 {
   "plugin": "node-pluginsmanager-plugin-terminals";
-  "command": "terminal.opened" | "terminal.closed" | "terminal.stdout" | "terminal.stderr" | "terminal.error";
-  "data": "#/components/schemas/TerminalEvent" | "#/components/schemas/TerminalContentEvent" | "#/components/schemas/TerminalErrorEvent";
+  "command": string;
+  "data"?: any;
 }
 ```
 
