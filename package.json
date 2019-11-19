@@ -1,6 +1,6 @@
 {
   "name": "node-pluginsmanager-plugin-terminals",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "A plugin to manage terminals and execute command lines for node-pluginsmanager",
   "main": "lib/main.js",
   "typings": "lib/index.d.ts",
@@ -34,7 +34,7 @@
     "url": "https://github.com/Psychopoulet/node-pluginsmanager-plugin-terminals/issues"
   },
   "dependencies": {
-    "node-pluginsmanager-plugin": "~3.2.0"
+    "node-pluginsmanager-plugin": "~3.2.2"
   },
   "devDependencies": {
     "@types/node": "12.12.9",
