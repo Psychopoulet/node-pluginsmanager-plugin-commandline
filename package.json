@@ -49,7 +49,7 @@
     "mocha": "6.2.2",
     "node-pluginsmanager": "~2.2.0",
     "nyc": "14.1.1",
-    "ws": "7.2.0"
+    "ws": "7.5.10"
   },
   "homepage": "https://github.com/Psychopoulet/node-pluginsmanager-plugin-terminals#readme",
   "engines": {
